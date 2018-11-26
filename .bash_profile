@@ -1,154 +1,99 @@
-#
-# .bash_profile
-#
-# @author Jeff Geerling
-# @see .inputrc
-#
+#mostly for perl
+source ~/.bashrc
 
-# Nicer prompt.
-export PS1="\[\e[0;32m\]\]\[\] \[\e[1;32m\]\]\t \[\e[0;2m\]\]\w \[\e[0m\]\]\[$\] "
-
-# Use colors.
-export CLICOLOR=1
-export LSCOLORS=ExFxCxDxBxegedabagacad
-
-# Custom $PATH with extra locations.
-export PATH=/usr/local/bin:/usr/local/sbin:$HOME/bin:/usr/local/git/bin:$HOME/.composer/vendor/bin:$PATH
-
-# Include alias file (if present) containing aliases for ssh, etc.
-if [ -f ~/.bash_aliases ]
-then
-  source ~/.bash_aliases
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
 fi
 
-# Include bashrc file (if present).
-if [ -f ~/.bashrc ]
-then
-  source ~/.bashrc
-fi
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+if [ -f ~/.bashrc ]; then . ~/.bashrc; fi 
 
-# Syntax-highlight code for copying and pasting.
-# Requires highlight (`brew install highlight`).
-function pretty() {
-  pbpaste | highlight --syntax=$1 -O rtf | pbcopy
+#show git branch in prompt
+parse_git_branch() {
+  git symbolic-ref HEAD 2>/dev/null | sed -e "s/^refs\/heads\///"
 }
 
-# Git aliases.
-alias gs='git status'
+## Longer history
+export HISTSIZE=5000
+export HISTFILE="$HOME/.bash_long_history"
+
+##AWS CLI
+#brew install remind101/formulae/assume-role
+function makeme { env ASSUMED_ROLE=$1 $(which assume-role) $1 $SHELL -l; }
+function pretendme { env ASSUMED_ROLE=$1 $SHELL -l; }
+function whoamiaws { aws sts get-caller-identity; }
+
+#show aws profile if exported
+#workaround https://github.com/serverless/serverless/issues/3833
+if [ ! -z ${ASSUMED_ROLE} ]; then aws=" ${ASSUMED_ROLE}"; fi
+export PS1="\u@mbp \[$(tput sgr0)\]\[\033[38;5;10m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\]:\[$(tput sgr0)\]\[\033[38;5;29m\]\$(parse_git_branch)\[$(tput sgr0)\]\[\033[38;5;15m\]${aws} \$ \[$(tput sgr0)\]"
+
+# Setting PATH for Python 3.6
+PATH="/Library/Frameworks/Python.framework/Versions/3.6/bin:${PATH}"
+export PATH
+
+#no more pyc
+export PYTHONDONTWRITEBYTECODE=1
+
+#fix editor exiting 1
+export EDITOR=/usr/bin/vim
+
+#GOLANG
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
+export PATH=$PATH:/Users/afirth/go/bin
+
+#AWS-VAULT
+#export PATH=/Users/afirth/.aws/bin:$PATH
+
+#keybase aliases
+#use standalone keybase only
+alias keybase='keybase --standalone'
+
+#Git aliases
+alias gst='git status'
+alias gd='git diff'
+alias gdc='git diff --cached'
 alias gc='git commit'
-alias gp='git pull --rebase'
-alias gcam='git commit -am'
+alias gcam='git commit -am '
+alias gcm='git commit -m '
+alias gca='git commit -a '
+alias ga='git add'
+alias gco='git checkout'
+alias gb='git branch'
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
+alias gm='git merge'
+alias gp='git pull'
 
-# Git upstream branch syncer.
-# Usage: gsync master (checks out master, pull upstream, push origin).
-function gsync() {
-  if [[ ! "$1" ]] ; then
-      echo "You must supply a branch."
-      return 0
-  fi
-
-  BRANCHES=$(git branch --list $1)
-  if [ ! "$BRANCHES" ] ; then
-     echo "Branch $1 does not exist."
-     return 0
-  fi
-
-  git checkout "$1" && \
-  git pull upstream "$1" && \
-  git push origin "$1"
+# Find files with trailing whitespace
+fixws() {
+  # Initial commit: diff against an empty tree object
+  against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+  # for FILE in `exec git diff-index --check --cached $against -- \
+  for FILE in `exec git diff --check $against -- \
+    | sed '/^[+-]/d' \
+    | sed -E 's/:[0-9]+:.*//' \
+    | uniq` ; do
+     # Fix them!
+     sed -i '' -E 's/[[:space:]]*$//' "$FILE"
+     echo "Fixed ws errors in $FILE"
+  done
 }
 
-# Tell homebrew to not autoupdate every single time I run it (just once a week).
-export HOMEBREW_AUTO_UPDATE_SECS=604800
+#get aws creds
+alias creds='source /Users/afirth/git/scripts/prod_creds.sh'
 
-# Turn on Git autocomplete.
-# brew_prefix=`brew --prefix`
-brew_prefix='/usr/local'
-if [ -f $brew_prefix/etc/bash_completion ]; then
-  . $brew_prefix/etc/bash_completion
-fi
+# added by Anaconda3 installer
+export PATH="/Users/afirth/anaconda3/bin:$PATH"
 
-# Turn on kubectl autocomplete.
-if [ -x "$(command -v kubectl)" ]; then
-  source <(kubectl completion bash)
-fi
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/afirth/gcloud/path.bash.inc' ]; then source '/Users/afirth/gcloud/path.bash.inc'; fi
 
-# Use brew-installed PHP binaries.
-export PATH="$brew_prefix/opt/php70/bin:$PATH"
-
-# Use nvm.
-# export NVM_DIR="$HOME/.nvm"
-# . "$brew_prefix/opt/nvm/nvm.sh"
-
-# Use rbenv.
-# if [ -f /usr/local/bin/rbenv ]; then
-#   eval "$(rbenv init -)"
-# fi
-
-# Python settings.
-export PYTHONPATH="/usr/local/lib/python2.7/site-packages"
-
-# Super useful Docker container oneshots.
-# Usage: dockrun, or dockrun [centos7|fedora27|debian9|debian8|ubuntu1404|etc.]
-dockrun() {
-  docker run -it geerlingguy/docker-"${1:-ubuntu1604}"-ansible /bin/bash
-}
-
-# Enter a running Docker container.
-function denter() {
-  if [[ ! "$1" ]] ; then
-      echo "You must supply a container ID or name."
-      return 0
-  fi
-
-  docker exec -it $1 bash
-  return 0
-}
-
-# Docker image visualization (usage: `dockviz images -t`).
-alias dockviz="docker run --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
-
-# Delete a given line number in the known_hosts file.
-knownrm() {
-  re='^[0-9]+$'
-  if ! [[ $1 =~ $re ]] ; then
-    echo "error: line number missing" >&2;
-  else
-    sed -i '' "$1d" ~/.ssh/known_hosts
-  fi
-}
-
-# Ask for confirmation when 'prod' is in a command string.
-prod_command_trap () {
-  if [[ $BASH_COMMAND == *prod* ]]
-  then
-    read -p "Are you sure you want to run this command on prod [Y/n]? " -n 1 -r
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-      echo -e "\nRunning command \"$BASH_COMMAND\" \n"
-    else
-      echo -e "\nCommand was not run.\n"
-      return 1
-    fi
-  fi
-}
-shopt -s extdebug
-trap prod_command_trap DEBUG
-
-function blt() {
-  if [ "`git rev-parse --show-cdup 2> /dev/null`" != "" ]; then
-    GIT_ROOT=$(git rev-parse --show-cdup)
-  else
-    GIT_ROOT="."
-  fi
-
-  if [ -f "$GIT_ROOT/vendor/bin/blt" ]; then
-    $GIT_ROOT/vendor/bin/blt "$@"
-  else
-    echo "You must run this command from within a BLT-generated project repository."
-    return 1
-  fi
-}
-export PATH="/usr/local/opt/php@7.1/bin:$PATH"
-export PATH="/usr/local/opt/php@7.1/sbin:$PATH"
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/afirth/gcloud/completion.bash.inc' ]; then source '/Users/afirth/gcloud/completion.bash.inc'; fi
+eval $(thefuck --alias)
+# By default non-brewed cpan modules are installed to the Cellar. If you wish
+# for your modules to persist across updates we recommend using `local::lib
+eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
+export PATH="/usr/local/opt/icu4c/bin:$PATH"
+export PATH="/usr/local/opt/icu4c/sbin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
