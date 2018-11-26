@@ -1,58 +1,68 @@
+"""
+" Run :PlugInstall after dropping this in place to install plugins with vim-plug
+"""
+
 set nocompatible              " be iMproved, required
-filetype off                  " required
 
-" Configure vundle
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+"" nastily install vim-plug
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin('~/.vim/plugged')
+
+Plug 'tpope/vim-sensible' "sensible vim defaults
 
 " assorted plugins
-Plugin 'scrooloose/syntastic'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'tpope/vim-fugitive'
+Plug 'scrooloose/syntastic' " syntax checking for various filetypes
+Plug 'altercation/vim-colors-solarized' " the best colorscheme
+Plug 'tpope/vim-fugitive' " git wrapper
 
 "ruby
-" Plugin 'tpope/vim-rails'
-" Plugin 'thoughtbot/vim-rspec'
-" Plugin 'tpope/vim-bundler'
+Plug 'tpope/vim-rails', { 'for': 'ruby' }
+Plug 'thoughtbot/vim-rspec', { 'for': 'ruby' }
+Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 
 "golang
-Plugin 'fatih/vim-go'
-Plugin 'mdempsky/gocode', {'rtp': 'vim/'}
+Plug 'fatih/vim-go', { 'for': 'go'}
+Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh', 'for': 'go' }
 
-Plugin 'ervandew/supertab' "autocomplete with tab
+Plug 'ervandew/supertab' "autocomplete with tab
 ":set completeopt=longest,menuone
 
-"Plugin 'jgdavey/tslime.vim' " send commands to tmux
+"Plug 'jgdavey/tslime.vim' " send commands to tmux
 
 " Folding, comments, and formatting plugins
-Plugin 'avakhov/vim-yaml' " autoformat yaml
-Plugin 'tmhedberg/SimpylFold' "folding
-"Plugin 'davidhalter/jedi-vim' "autocomplete, esp for python
-Plugin 'scrooloose/nerdcommenter' " Comment blocks: \c<space> to toggle
+Plug 'avakhov/vim-yaml', { 'for': 'yaml' } " autoformat yaml
+Plug 'tmhedberg/SimpylFold' "folding
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }  "autocomplete, esp for python
+Plug 'scrooloose/nerdcommenter' " Comment blocks: \c<space> to toggle
 let g:NERDSpaceDelims = 1
 
-Plugin 'Smart-Tabs' " Smart tabs - tabs at line start, spaces for variable alignment
+Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for variable alignment
 "to use: :RetabIndent[!]
 
 " Markdown
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+Plug 'godlygeek/tabular', { 'for': 'markdown' } 
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } 
 let g:vim_markdown_new_list_item_indent = 0 " don't indent list items
 let g:vim_markdown_folding_disabled=1 " disable markdown auto folding
 
-"Plugin 'nathanaelkane/vim-indent-guides' " shows indent guides in colors
+"Plug 'nathanaelkane/vim-indent-guides' " shows indent guides in colors
 let g:indent_guides_enable_on_vim_startup = 0 " Turn off indent guides
 
 " Elixir
-"Plugin 'elixir-lang/vim-elixir'
-"Plugin 'mattreduce/vim-mix'
+Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' } 
+Plug 'mattreduce/vim-mix', { 'for': 'elixir' } 
 
 " Terraform
-"Plugin 'hashivim/vim-terraform'
+" Plug 'hashivim/vim-terraform'
 
-call vundle#end() " Regular config resumes here
+call plug#end()
+" Regular config resumes here
+
 
 
 "" File handling
