@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+#from homebrew caveats (brew info perl) with default options for cpan
+PERL_MM_USE_DEFAULT=1 PERL_MM_OPT="INSTALL_BASE=$HOME/perl5" cpan local::lib
