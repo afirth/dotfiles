@@ -14,7 +14,10 @@ if [[ -f ${shell_path} && $BASH_VERSION == "3."* ]]; then
   chsh -s ${shell_path} && echo Login shell updated to $(${shell_path} --version), relaunch.
 fi
 sourcef ${HOME}/.bashrc
+# bash-completion (bash 3.x)
 sourcef $(brew --prefix)/etc/bash_completion
+# bash-completion@2 (bash 4.x)
+sourcef $(brew --prefix)/share/bash-completion/bash_completion
 ## Longer history
 export HISTSIZE=5000
 # parse_git_branch returns current git branch (for prompt)
