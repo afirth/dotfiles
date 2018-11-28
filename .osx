@@ -55,6 +55,7 @@ defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 if [[ "$RUN_AS_ROOT" = true ]]; then
   # Disable local Time Machine snapshots
   sudo tmutil disablelocal
+fi
 
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
@@ -368,7 +369,7 @@ defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
 
 # Allow the homebrew installed bash to be a login shell
 if [[ "$RUN_AS_ROOT" = true ]]; then
-echo /usr/local/bin/bash | sudo tee -a /etc/shells
+  echo /usr/local/bin/bash | sudo tee -a /etc/shells
 fi
 
 ###############################################################################
