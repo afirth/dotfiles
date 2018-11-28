@@ -8,6 +8,11 @@ function sourcef {
 }
 
 # Bash
+# use homebrew bash as login shell
+shell_path=/usr/local/bin/bash
+if [[ test -f ${shell_path} && $BASH_VERSION == "3."* ]]; then
+  chsh -s ${shell_path} && echo Login shell updated to $(${shell_path} --version), relaunch.
+fi
 sourcef ${HOME}/.bashrc
 sourcef $(brew --prefix)/etc/bash_completion
 ## Longer history

@@ -366,6 +366,9 @@ defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
 # Use the system print dialog
 # defaults write com.google.Chrome DisablePrintPreview -bool true
 
+# Allow the homebrew installed bash to be a login shell
+echo /usr/local/bin/bash | sudo tee -a /etc/shells
+
 ###############################################################################
 # Kill/restart affected applications                                          #
 ###############################################################################
