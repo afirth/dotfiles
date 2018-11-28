@@ -367,7 +367,9 @@ defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
 # defaults write com.google.Chrome DisablePrintPreview -bool true
 
 # Allow the homebrew installed bash to be a login shell
+if [[ "$RUN_AS_ROOT" = true ]]; then
 echo /usr/local/bin/bash | sudo tee -a /etc/shells
+fi
 
 ###############################################################################
 # Kill/restart affected applications                                          #
@@ -381,3 +383,4 @@ if [[ ! ($* == *--no-restart*) ]]; then
 fi
 
 printf "Please log out and log back in to make all settings take effect.\n"
+
