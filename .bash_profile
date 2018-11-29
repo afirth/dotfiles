@@ -106,7 +106,7 @@ export PATH="/usr/local/sbin:$PATH"
 
 #GOLANG
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
-export PATH=$PATH:/Users/afirth/go/bin
+export PATH=$PATH:$HOME/go/bin
 
 #AWS-VAULT
-#export PATH=/Users/afirth/.aws/bin:$PATH
+#export PATH=$HOME/.aws/bin:$PATH
