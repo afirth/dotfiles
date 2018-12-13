@@ -52,6 +52,10 @@ function whoamiaws { aws sts get-caller-identity; }
 #fix editor exiting 1
 export EDITOR=/usr/bin/vim
 
+# Gcloud
+# stream last build logs
+alias gblog='gcloud beta builds list --limit=1 --format=value\(extract\(id\)\) | xargs gcloud beta builds log --stream'
+
 # Keybase
 #use standalone keybase only
 alias keybase='keybase --standalone'
