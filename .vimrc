@@ -134,6 +134,7 @@ set hlsearch            " highlighted search results
 " map space to turn off search highlighting in normal mode
 nnoremap <Space> :noh<cr><Space>
 set showmatch           " show matching bracket
+set ignorecase
 set smartcase           " ignore case unless UC in search
 
 " ignore annoying obviously bad paths for matching
