@@ -19,14 +19,15 @@ sourcef $(brew --prefix)/etc/bash_completion
 # bash-completion@2 (bash 4.x)
 sourcef $(brew --prefix)/share/bash-completion/bash_completion
 ## Longer history
-export HISTSIZE=5000
-# parse_git_branch returns current git branch (for prompt)
-parse_git_branch() {
-  git symbolic-ref HEAD 2>/dev/null | sed -e "s/^refs\/heads\///"
-}
+export HISTSIZE=500
+# aliases
+alias duh="du -ahc"
 alias ll="ls -laht"
 alias vi="vim"
+# options
 set -o vi
+# profile
+sourcef ~/.bash_prompt
 
 # Grep
 export GREP_COLORS=auto
@@ -42,11 +43,6 @@ sourcef ${HOME}/.iterm2_shell_integration.bash
 function makeme { env ASSUMED_ROLE=$1 $(which assume-role) $1 $SHELL -l; }
 function pretendme { env ASSUMED_ROLE=$1 $SHELL -l; }
 function whoamiaws { aws sts get-caller-identity; }
-
-#show aws profile if exported
-#workaround https://github.com/serverless/serverless/issues/3833
-#if [ ! -z ${ASSUMED_ROLE} ]; then aws=" ${ASSUMED_ROLE}"; fi
-#export PS1="\u@mbp \[$(tput sgr0)\]\[\033[38;5;10m\]\W\[$(tput sgr0)\]\[\033[38;5;15m\]:\[$(tput sgr0)\]\[\033[38;5;29m\]\$(parse_git_branch)\[$(tput sgr0)\]\[\033[38;5;15m\]${aws} \$ \[$(tput sgr0)\]"
 
 # ViM
 #fix editor exiting 1
