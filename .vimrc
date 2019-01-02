@@ -45,8 +45,8 @@ Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for vari
 "to use: :RetabIndent[!]
 
 " Markdown
-Plug 'godlygeek/tabular', { 'for': 'markdown' } 
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' } 
+Plug 'godlygeek/tabular', { 'for': 'markdown' }
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 let g:vim_markdown_new_list_item_indent = 0 " don't indent list items
 let g:vim_markdown_folding_disabled=1 " disable markdown auto folding
 
@@ -54,8 +54,8 @@ let g:vim_markdown_folding_disabled=1 " disable markdown auto folding
 let g:indent_guides_enable_on_vim_startup = 0 " Turn off indent guides
 
 " Elixir
-Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' } 
-Plug 'mattreduce/vim-mix', { 'for': 'elixir' } 
+Plug 'elixir-lang/vim-elixir', { 'for': 'elixir' }
+Plug 'mattreduce/vim-mix', { 'for': 'elixir' }
 
 " Terraform
 " Plug 'hashivim/vim-terraform'

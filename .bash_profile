@@ -1,6 +1,6 @@
 # Functions
 # sourcef tests file exists, then sources to avoid throwing errors
-function sourcef { 
+function sourcef {
   if [ -f "$1" ]
   then
     source $1
@@ -94,8 +94,8 @@ eval "$(perl -I$HOME/perl5/lib/perl5 -Mlocal::lib=$HOME/perl5)"
 export PYTHONDONTWRITEBYTECODE=1
 
 # Gcloud SDK
-sourcef /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc 
-sourcef /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc 
+sourcef /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc
+sourcef /usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc
 
 # icu4c unicode support library
 export PATH="/usr/local/opt/icu4c/bin:$PATH"

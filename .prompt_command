@@ -5,7 +5,7 @@
 # forked from https://github.com/twolfson/sexy-bash-prompt (MIT)
 # afirth 2018
 
-# set -ux 
+# set -ux
 
 source .prompt_colors
 
@@ -14,6 +14,8 @@ PROMPT_COMMAND=prompt_command
 # Define the prompt
 function prompt_command() {
 	retval=$?
+	history -a
+
 	# exit status, time, user, host, directory
 	PS1="\[$txtrst\]$(prompt_get_exit_status) [\t] \u@\h \w\[$txtrst\]"
 
@@ -51,8 +53,8 @@ function prompt_get_git_branch() {
 
 function prompt_get_exit_status() {
 	if [[ $retval -eq 0 ]]; then
-		echo -n "✓" 
-	else 
+		echo -n "✓"
+	else
 		echo -n "❌($retval)"
 	fi
 }
