@@ -27,7 +27,7 @@ alias vi="vim"
 # options
 set -o vi
 # profile
-sourcef ~/.bash_prompt
+sourcef .prompt_command
 
 # Grep
 export GREP_COLORS=auto

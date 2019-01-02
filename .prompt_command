@@ -6,10 +6,27 @@
 # afirth 2018
 
 # set -ux 
-	
-PROMPT_COMMAND=__prompt_command
 
-source .bash_colors
+source .prompt_colors
+
+PROMPT_COMMAND=prompt_command
+
+# Define the prompt
+function prompt_command() {
+	retval=$?
+	# exit status, time, user, host, directory
+	PS1="\[$txtrst\]$(prompt_get_exit_status) [\t] \u@\h \w\[$txtrst\]"
+
+	# git info
+	if prompt_is_on_git; then
+		PS1="${PS1} \[$txtcyn\]$(prompt_get_git_info)\[$txtylw\]$(prompt_get_git_progress)"
+	fi
+
+	# new line, prompt, and clear format
+	PS1="${PS1} \n\[$txtrst\]\[$txtcyn\]\$ \[$txtrst\]"
+
+	export PS1
+}
 
 # Set up symbols
 prompt_synced_symbol="👌"
@@ -124,7 +141,7 @@ function prompt_parse_git_dirty() {
 }
 
 function prompt_is_on_git() {
-	git rev-parse 2> /dev/null
+	git rev-parse &> /dev/null
 }
 
 function prompt_get_git_status() {
@@ -168,16 +185,4 @@ prompt_get_git_info () {
 		# Echo our output
 		echo "$output"
 	fi
-}
-
-# Define the prompt
-__prompt_command() {
-retval=$? #must be preserved
-PS1="\[$txtrst\]$(prompt_get_exit_status) \
-[\t] \u@\h \w\[$txtrst\]\
-\$( prompt_is_on_git && \
-echo -n \" \[$txtcyn\]\$(prompt_get_git_info)\" && \
-echo -n \"\[$txtylw\]\$(prompt_get_git_progress)\" && \
-echo -n \"\[$txtrst\]\") \
-\n\[$txtrst\]\[$txtcyn\]\$ \[$txtrst\]"
 }
