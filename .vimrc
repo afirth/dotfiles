@@ -116,6 +116,7 @@ set shiftwidth=2        " front of line
 set tabstop=2
 set softtabstop=2       " midline, even if no text after (with smarttab)
 let g:html_indent_inctags = "html,body,head,tbody" "indent includes for html
+set list                " since we have sensible tab displays now
 
 
 "" Bells
