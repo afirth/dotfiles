@@ -9,7 +9,8 @@
   editor = vim
   excludesfile = /Users/afirth/.gitignore
 [credential]
-  helper = osxkeychain
+  # helper = osxkeychain
+  helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 [gpg]
   program = gpg
 [pull]
