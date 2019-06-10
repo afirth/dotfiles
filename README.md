@@ -5,7 +5,8 @@ Modified from geerlinguy
 ## quickstart
 
 # Ubuntu 18.x
-`./setup.sh`
+sudo apt-get git
+sudo make
 
 # OSX
 ```
