@@ -5,7 +5,12 @@
 # @afirth 2019
 # sets up my ubuntu 18 terminal, more or less
 
+GO_VERSION=1.12.5
+
 set -eux -o pipefail
+
+# install go
+test -d /usr/local/go || install_golang
 
 # install zsh and oh-my-zsh
 set +x
@@ -47,4 +52,9 @@ install_oh_my_zsh () {
   curl -Lo install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
   sh install.sh --unattended
   rm install.sh
+}
+
+install_golang () {
+  curl -fsSL https://dl.google.com/go/go${GO_VERSION}.linux-amd64.tar.gz | sudo tar -C /usr/local -xz
+  sudo ln -fs /usr/local/go/bin/go /usr/local/bin
 }
