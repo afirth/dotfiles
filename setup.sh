@@ -13,6 +13,11 @@ which zsh || sudo apt-get update && sudo apt-get -y install zsh
 test -f $HOME/.oh-my-zsh/oh-my-zsh.sh || instal_oh_my_zsh
 set -x
 
+# setup git cred helper
+sudo apt-get install -y libsecret-1-0 libsecret-1-dev
+sudo make -C /usr/share/doc/git/contrib/credential/libsecret
+# it's already in .gitconfig
+
 # install vim-gtk3
 # it's already aliased to vi in zshrc
 which vim || sudo apt-get -y install vim-gtk3
@@ -33,7 +38,8 @@ set -e
 
 chsh -s /usr/bin/zsh
 
-set +x echo Log out and log back in for chsh to take effect
+set +x
+echo Log out and log back in for chsh to take effect
 
 install_oh_my_zsh () {
   curl -Lo install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
