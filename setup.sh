@@ -12,6 +12,8 @@ set +x
 which zsh || sudo apt-get update && sudo apt-get -y install zsh
 test -f $HOME/.oh-my-zsh/oh-my-zsh.sh || instal_oh_my_zsh
 set -x
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
 
 # setup git cred helper
 sudo apt-get install -y libsecret-1-0 libsecret-1-dev
@@ -32,7 +34,7 @@ FILES=".bash_profile
 set +e
 for f in $FILES
 do
-	ln -sr $PWD/$f $HOME/$f
+	ln -fsr $PWD/$f $HOME/$f
 done
 set -e
 
