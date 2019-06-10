@@ -118,7 +118,7 @@ alias gblog='gcloud beta builds list --limit=1 --format=value\(extract\(id\)\) |
 
 # skaffold
 which skaffold > /dev/null && \
-  source ~/.skaffold-completion
+  source <(skaffold completion zsh)
 
 ## zsh options
 # unsetopt share_history
@@ -129,7 +129,10 @@ export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=25
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/afirth/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/afirth/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/afirth/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/afirth/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+## INSTALL curl https://sdk.cloud.google.com | bash
+gc_path=$HOME/google-cloud-sdk/
+if [ -d $gc_path ]; then
+  for file in $gc_path/*.zsh.inc; do
+    source "$file"
+  done
+fi
