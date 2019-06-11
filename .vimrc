@@ -71,14 +71,15 @@ autocmd CursorHold * checktime
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 "" Appearance
+set cursorcolumn        " highlight the current column
 set cursorline          " highlight the current line
 set laststatus=2        " always show status line
 set number              " show line numbers
-set ruler               " show line number in bar
+set ruler               " show cursor position in status line
 set scrolloff=5         " show at least 5 lines above/below
 set showcmd             " show selection metadata
 set showmode            " show INSERT, VISUAL, etc. mode
-set splitright          "default to vsplit
+set splitright          " put splits to right with :vsp
 
 " Wrapping
 set wrap           " wrap long lines (on display)
@@ -86,10 +87,9 @@ set lbr            " break at a sensible character (on display)
 "set textwidth=80   " actually break
 
 " Colorscheme
-set background=dark
-"set background=light
-" let g:solarized_visibility = "high"
-" let g:solarized_contrast = "high"
+" set background=dark
+ " let g:solarized_visibility = "high"
+ " let g:solarized_contrast = "high"
 let g:solarized_termtrans = 1
 colorscheme solarized
 
@@ -156,7 +156,9 @@ end
 
 "" Clipboard
 " :version must have +clipboard. Use vim, not vi, on osx homebrew. vim 7.4+
-set clipboard+=unnamed " allow yy, etc. to interact with OS X clipboard
+"" Linux apt-get install vim-gtk; alias vi=vim
+set clipboard=autoselect,unnamedplus
+" allow yy, etc. to interact with OS X clipboard
 
 
 "" Mappings

@@ -7,7 +7,7 @@
   rebase = true
 [core]
   editor = vim
-  excludesfile = /Users/afirth/.gitignore
+  excludesfile = /home/afirth/.gitignore
 [credential]
   # helper = osxkeychain
   helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
@@ -15,3 +15,7 @@
   program = gpg
 [pull]
   rebase = true
+[diff "sopsdiffer"]
+  textconv = sops -d
+[hub]
+  protocol = https

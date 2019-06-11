@@ -9,6 +9,9 @@ which go > /dev/null && \
   export GOPATH=$(go env GOPATH) && \
   export PATH=$GOPATH/bin:$PATH
 
+# Linkerd
+export PATH=$PATH:$HOME/.linkerd2/bin
+
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
@@ -73,6 +76,7 @@ plugins=(
   git
   golang
   kubectl
+  kube-ps1
   osx
   vi-mode
   z # fast dir switching
@@ -106,8 +110,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-#nope
-alias rm="rm"
+
+alias vi='vim'
 
 #git overrides
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
@@ -115,13 +119,26 @@ alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 # Gcloud
 # stream last build logs
 alias gblog='gcloud beta builds list --limit=1 --format=value\(extract\(id\)\) | xargs gcloud beta builds log --stream'
+# apt-get default path
+if [ -f '/usr/share/google-cloud-sdk/completion.zsh.inc' ]; then . '/usr/share/google-cloud-sdk/completion.zsh.inc'; fi
 
 # skaffold
 which skaffold > /dev/null && \
   source <(skaffold completion zsh)
 
+# JenkinsX
+export PATH=$PATH:$HOME/.jx/bin
+which jx > /dev/null && \
+  source <(jx completion zsh)
+
 ## zsh options
+
+## HISTORY
 # unsetopt share_history
+## prepend lines with space to keep them from being recorded
+setopt hist_ignore_space
+export HISTSIZE=100000
+export SAVEHIST=HISTSIZE
 
 ## don't complete long lines
 export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=25
@@ -136,3 +153,11 @@ if [ -d $gc_path ]; then
     source "$file"
   done
 fi
+
+## magical regex globs
+setopt extendedglob
+
+## prompt
+# add kubectx info to prompt
+NEWLINE=$'\n'
+PROMPT=$PROMPT'$(kube_ps1)'${NEWLINE}
