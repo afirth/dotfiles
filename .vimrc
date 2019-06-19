@@ -69,6 +69,7 @@ call plug#end()
 set encoding=utf-8
 autocmd CursorHold * checktime
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+set modeline " allow modelines to override things, typically filetype
 
 "" Appearance
 set cursorcolumn        " highlight the current column

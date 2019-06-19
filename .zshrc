@@ -12,7 +12,10 @@ which go > /dev/null && \
 # Linkerd
 export PATH=$PATH:$HOME/.linkerd2/bin
 which linkerd > /dev/null && \
-    source <(linkerd completion zsh)
+  # linkerd completion zsh > "${fpath[1]}/_linkerd"
+  #source <(linkerd completion zsh)
+  echo TODO fix linkerd completion
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
