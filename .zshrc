@@ -16,6 +16,9 @@ which linkerd > /dev/null && \
   #source <(linkerd completion zsh)
   echo TODO fix linkerd completion
 
+# Kubebuilder
+export PATH=$PATH:/usr/local/kubebuilder/bin
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
