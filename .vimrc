@@ -28,6 +28,7 @@ Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 "golang
 Plug 'fatih/vim-go', { 'for': 'go'}
 Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh', 'for': 'go' }
+let g:go_addtags_transform="camelcase" " json tags in camelCase instead of snake_case, required for kube
 
 Plug 'ervandew/supertab' "autocomplete with tab
 ":set completeopt=longest,menuone
