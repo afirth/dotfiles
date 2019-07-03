@@ -10,7 +10,8 @@
   excludesfile = /home/afirth/.gitignore
 [credential]
   # helper = osxkeychain
-  helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+   helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+  # helper = cache
 [gpg]
   program = gpg
 [pull]

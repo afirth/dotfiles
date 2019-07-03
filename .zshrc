@@ -123,6 +123,7 @@ alias vi='vim'
 
 #git overrides
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
+alias gcm='git commit -m'
 
 # Gcloud
 # stream last build logs
