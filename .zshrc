@@ -119,6 +119,11 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+unalias gcb
+function gcb {
+  git checkout -b `date +%F`-"$1"
+}
+
 alias vi='vim'
 alias drsh='docker run --rm -it --entrypoint=sh'
 
