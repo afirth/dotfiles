@@ -4,6 +4,9 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+# local bin
+export PATH=~/.local/bin:$PATH
+
 # Golang
 which go > /dev/null && \
   export GOPATH=$(go env GOPATH) && \
@@ -118,6 +121,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+alias zzz="systemctl suspend -i"
 
 unalias gcb
 function gcb {
