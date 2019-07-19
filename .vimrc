@@ -44,6 +44,7 @@ let g:NERDSpaceDelims = 1
 
 Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for variable alignment
 "to use: :RetabIndent[!]
+set listchars=tab:▸ ,trail:-,extends:>,precedes:<,nbsp:¿
 
 " Markdown
 Plug 'godlygeek/tabular', { 'for': 'markdown' }

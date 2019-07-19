@@ -88,7 +88,6 @@ plugins=(
   golang
   kubectl
   kube-ps1
-  osx
   vi-mode
   z # fast dir switching
   zsh-autosuggestions # fish style autocomplete
