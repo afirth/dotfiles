@@ -20,6 +20,10 @@ Plug 'scrooloose/syntastic' " syntax checking for various filetypes
 Plug 'altercation/vim-colors-solarized' " the best colorscheme
 Plug 'tpope/vim-fugitive' " git wrapper
 
+"typescript
+autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+
 "ruby
 Plug 'tpope/vim-rails', { 'for': 'ruby' }
 Plug 'thoughtbot/vim-rspec', { 'for': 'ruby' }
@@ -91,8 +95,8 @@ set lbr            " break at a sensible character (on display)
 
 " Colorscheme
 " set background=dark
- " let g:solarized_visibility = "high"
- " let g:solarized_contrast = "high"
+" let g:solarized_visibility = "high"
+let g:solarized_contrast = "high"
 let g:solarized_termtrans = 1
 colorscheme solarized
 

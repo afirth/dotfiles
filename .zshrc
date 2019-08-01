@@ -93,6 +93,7 @@ plugins=(
   zsh-autosuggestions # fish style autocomplete
 )
 
+DISABLE_MAGIC_FUNCTIONS=true #BUG https://stackoverflow.com/questions/25614613/how-to-disable-zsh-substitution-autocomplete-with-url-and-backslashes
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
