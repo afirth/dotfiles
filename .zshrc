@@ -123,6 +123,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias zzz="systemctl suspend -i"
+alias ll='ls -laht'
 
 unalias gcb
 function gcb {
