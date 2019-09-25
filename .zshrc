@@ -181,4 +181,6 @@ setopt extendedglob
 ## prompt
 # add kubectx info to prompt
 NEWLINE=$'\n'
-PROMPT=$PROMPT'$(kube_ps1)'${NEWLINE}
+KUBE_PS1_SYMBOL_ENABLE=true
+#shorten cluster name
+PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke_camunda-cloud-240911/cc/")'${NEWLINE}
