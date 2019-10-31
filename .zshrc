@@ -16,7 +16,7 @@ which go > /dev/null && \
 export PATH=$PATH:$HOME/.linkerd2/bin
 which linkerd > /dev/null && \
   # linkerd completion zsh > "${fpath[1]}/_linkerd"
-  #source <(linkerd completion zsh)
+  source <(linkerd completion zsh)
   echo TODO fix linkerd completion
 
 # Kubebuilder
@@ -132,6 +132,9 @@ function gcb {
 
 alias vi='vim'
 alias drsh='docker run --rm -it --entrypoint=sh'
+
+#kube stuff
+kubens() { kubectl config set-context --current --namespace="$@"; }
 
 #git overrides
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
