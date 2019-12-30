@@ -134,7 +134,7 @@ alias vi='vim'
 alias drsh='docker run --rm -it --entrypoint=sh'
 
 #kube stuff
-kubens() { kubectl config set-context --current --namespace="$@"; }
+alias kns='kubectl config set-context --current --namespace'
 
 #git overrides
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
