@@ -86,8 +86,9 @@ plugins=(
   docker
   git
   golang
-  kubectl
   kube-ps1
+  kubectl
+  tmux
   vi-mode
   z # fast dir switching
   zsh-autosuggestions # fish style autocomplete
