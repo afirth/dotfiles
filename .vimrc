@@ -94,7 +94,7 @@ set lbr            " break at a sensible character (on display)
 "set textwidth=80   " actually break
 
 " Colorscheme
-" set background=dark
+set background=dark
 " let g:solarized_visibility = "high"
 let g:solarized_contrast = "high"
 let g:solarized_termtrans = 1
