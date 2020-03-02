@@ -69,7 +69,14 @@ Plug 'mattreduce/vim-mix', { 'for': 'elixir' }
 call plug#end()
 " Regular config resumes here
 
-
+" Colorscheme
+" set t_Co=256                           " force 256 color support
+" let g:solarized_termcolors=256
+set background=dark
+" let g:solarized_visibility = "high"
+" let g:solarized_contrast = "high"
+" let g:solarized_termtrans = 1
+colorscheme solarized
 
 "" File handling
 set encoding=utf-8
@@ -92,13 +99,6 @@ set splitright          " put splits to right with :vsp
 set wrap           " wrap long lines (on display)
 set lbr            " break at a sensible character (on display)
 "set textwidth=80   " actually break
-
-" Colorscheme
-set background=dark
-" let g:solarized_visibility = "high"
-let g:solarized_contrast = "high"
-let g:solarized_termtrans = 1
-colorscheme solarized
 
 " Folding
 set foldmethod=syntax
