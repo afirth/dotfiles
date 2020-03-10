@@ -84,6 +84,7 @@ ZSH_THEME="afirth"
 plugins=(
   common-aliases
   docker
+  gcloud
   git
   golang
   kube-ps1
