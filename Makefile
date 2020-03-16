@@ -69,7 +69,7 @@ $(tmux):
 ## dotfile links
 # depends on zsh because otherwise zsh install breaks
 .PHONY: dotfiles
-dotfiles: $(links) $(zsh)
+dotfiles: $(links) | $(zsh)
 
 $(links): $(HOME)/%: %
 	@mkdir -p $(@D)
