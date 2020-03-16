@@ -29,6 +29,9 @@ export PATH=$PATH:/usr/local/kubebuilder/bin
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="afirth"
 
+## zsh options
+export ZSH_TMUX_AUTOSTART=true
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -98,13 +101,6 @@ plugins=(
 DISABLE_MAGIC_FUNCTIONS=true #BUG https://stackoverflow.com/questions/25614613/how-to-disable-zsh-substitution-autocomplete-with-url-and-backslashes
 source $ZSH/oh-my-zsh.sh
 
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
 # Preferred editor for local and remote sessions
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
@@ -127,6 +123,7 @@ source $ZSH/oh-my-zsh.sh
 alias zzz="systemctl suspend -i"
 alias ll='ls -laht'
 
+# git branch creation
 unalias gcb
 function gcb {
   git checkout -b `date +%F`-"$1"
@@ -157,7 +154,6 @@ export PATH=$PATH:$HOME/.jx/bin
 which jx > /dev/null && \
   source <(jx completion zsh)
 
-## zsh options
 
 ## HISTORY
 # unsetopt share_history
