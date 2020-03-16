@@ -6,6 +6,7 @@ SHELL = /bin/bash
 dotfiles = .bash_profile \
         .gitconfig \
         .oh-my-zsh/custom/themes/afirth.zsh-theme \
+        .tmux.conf \
         .vimrc \
         .zshrc
 links := $(patsubst %,$(HOME)/%,$(dotfiles))
