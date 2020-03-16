@@ -61,10 +61,11 @@ $(golang): /usr/local/go
 # it's already aliased to vi in zshrc
 # as-sudo
 $(vim):
-	which vim || apt-get -y install vim-gtk3
+	which vim || $(apt) -y install vim-gtk3
 
 $(tmux):
-	which tmux || apt-get -y install tmux
+	which tmux || $(apt) -y install tmux
+	git clone https://github.com/tmux-plugins/tpm $(HOME)/.tmux/plugins/tpm
 
 ## dotfile links
 # depends on zsh because otherwise zsh install breaks
