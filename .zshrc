@@ -187,4 +187,4 @@ setopt extendedglob
 NEWLINE=$'\n'
 KUBE_PS1_SYMBOL_ENABLE=true
 #shorten cluster name
-PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke_camunda-cloud-240911/cc/")'${NEWLINE}
+PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}
