@@ -30,7 +30,10 @@ export PATH=$PATH:/usr/local/kubebuilder/bin
 ZSH_THEME="afirth"
 
 ## zsh options
+# always start in tmux
 export ZSH_TMUX_AUTOSTART=true
+# change color for solarized dark
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=60'
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
