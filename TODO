@@ -1,4 +1,26 @@
+install sops - github .deb
 install hub
 github credentials for hub
 install kustomize to .local/bin
-tree
+apt-fast install -y tree ack jq p7zip pavucontrol xclip
+
+gtile gnome extension
+6x4
+
+docker (from setup script)
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+
+docker add user to group
+ sudo usermod -aG docker $USER
+
+hide top bar gnome extension
+
+hide dock:
+gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
+gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
+gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
+
+swap capslock
+(gnome tweaks works)
+or set xkboptions on login caps:swap
