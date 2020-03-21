@@ -11,6 +11,8 @@ export PATH=~/.local/bin:$PATH
 which go > /dev/null && \
   export GOPATH=$(go env GOPATH) && \
   export PATH=$GOPATH/bin:$PATH
+  export PATH=/usr/local/go/bin:$PATH #for ubuntu go install
+
 
 # Linkerd
 export PATH=$PATH:$HOME/.linkerd2/bin
