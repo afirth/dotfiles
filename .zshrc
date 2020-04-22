@@ -128,6 +128,8 @@ source $ZSH/oh-my-zsh.sh
 alias zzz="systemctl suspend -i"
 alias ll='ls -laht'
 
+alias afiy='apt-fast install -y'
+
 # git branch creation
 unalias gcb
 function gcb {
@@ -168,7 +170,7 @@ export HISTSIZE=100000
 export SAVEHIST=HISTSIZE
 
 ## don't complete long lines
-export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=25
+export ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=40
 ## and be faster
 export ZSH_AUTOSUGGEST_USE_ASYNC=true
 
@@ -189,4 +191,4 @@ setopt extendedglob
 NEWLINE=$'\n'
 KUBE_PS1_SYMBOL_ENABLE=true
 #shorten cluster name
-PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}
+PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}'$ '
