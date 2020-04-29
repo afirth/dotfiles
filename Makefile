@@ -69,7 +69,7 @@ $(links): $(HOME)/%: %
 	ln -fsr $< $@
 
 $(git-creds): | $(apt)
-	$(apt) install -y libsecret-1-0 libsecret-1-dev
+	$(apt) install -y libsecret-1-0 libsecret-1-dev build-essential
 	sudo $(MAKE) -C /usr/share/doc/git/contrib/credential/libsecret
 
 ## ZSH
