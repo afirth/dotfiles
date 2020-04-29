@@ -54,7 +54,7 @@ $(xinitrc):
 ## GOLANG
 GO_VERSION := 1.14
 $(golang): /usr/local/go
-	ln -fs /usr/local/go/bin/go /usr/local/bin
+	sudo ln -fs /usr/local/go/bin/go /usr/local/bin
 
 /usr/local/go: $(curl)
 	curl -fsSL https://dl.google.com/go/go$(GO_VERSION).linux-amd64.tar.gz | tar -C /usr/local -xvz
@@ -80,7 +80,7 @@ $(links): $(HOME)/%: %
 
 $(git-creds): $(apt)
 	$(apt) install -y libsecret-1-0 libsecret-1-dev
-	$(MAKE) -C /usr/share/doc/git/contrib/credential/libsecret
+	sudo $(MAKE) -C /usr/share/doc/git/contrib/credential/libsecret
 
 ## ZSH
 ### oh-my-zsh
@@ -107,6 +107,6 @@ $(curl): $(apt)
 
 ## Apt-fast
 $(apt):
-	add-apt-repository -y ppa:apt-fast/stable
-	apt-get update
-	apt-get -y install apt-fast
+	sudo add-apt-repository -y ppa:apt-fast/stable
+	sudo apt-get update
+	sudo apt-get -y install apt-fast
