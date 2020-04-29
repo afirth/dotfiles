@@ -27,10 +27,8 @@ all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) gcloud $(git-creds) $(vim) $(tm
 
 .PHONY: gcloud
 gcloud: $(curl)
-	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
-	$(apt) install -y google-cloud-sdk
-	echo "run gcloud init"
+	sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-sdk -y'
+	$(warning run gcloud init)
 
 .PHONY: capslock
 # so you can use the keyboard
