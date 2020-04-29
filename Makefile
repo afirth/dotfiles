@@ -23,10 +23,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links)
-
-.PHONY: as-sudo
-as-sudo: $(golang) gcloud $(git-creds) $(vim) $(tmux)
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) gcloud $(git-creds) $(vim) $(tmux) $(apt)
 
 #install with sudo make golang
 golang: $(golang)
@@ -57,11 +54,10 @@ $(golang): /usr/local/go
 	sudo ln -fs /usr/local/go/bin/go /usr/local/bin
 
 /usr/local/go: $(curl)
-	curl -fsSL https://dl.google.com/go/go$(GO_VERSION).linux-amd64.tar.gz | tar -C /usr/local -xvz
+	sudo curl -fsSL https://dl.google.com/go/go$(GO_VERSION).linux-amd64.tar.gz | tar -C /usr/local -xvz
 
 # install vim-gtk3
 # it's already aliased to vi in zshrc
-# as-sudo
 $(vim):
 	which vim || $(apt) -y install vim-gtk3
 
@@ -86,7 +82,7 @@ $(git-creds): $(apt)
 ### oh-my-zsh
 $(oh-my-zsh): $(zsh) $(curl)
 	curl -Lo /tmp/install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
-	sh /tmp/install.sh --unattended
+	-sh /tmp/install.sh --unattended
 	rm /tmp/install.sh
 	# will be replaced by link
 	rm $(HOME)/.zshrc
