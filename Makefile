@@ -23,13 +23,9 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) gcloud $(git-creds) $(vim) $(tmux) $(apt)
-
-#install with sudo make golang
-golang: $(golang)
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) gcloud $(git-creds) $(vim) $(tmux) $(curl) $(apt)
 
 .PHONY: gcloud
-#as sudo
 gcloud: $(curl)
 	echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 	curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
@@ -53,8 +49,8 @@ GO_VERSION := 1.14
 $(golang): /usr/local/go
 	sudo ln -fs /usr/local/go/bin/go /usr/local/bin
 
-/usr/local/go: $(curl)
-	sudo curl -fsSL https://dl.google.com/go/go$(GO_VERSION).linux-amd64.tar.gz | tar -C /usr/local -xvz
+/usr/local/go: | $(curl)
+	curl -fsSL https://dl.google.com/go/go$(GO_VERSION).linux-amd64.tar.gz | sudo tar -C /usr/local -xvz
 
 # install vim-gtk3
 # it's already aliased to vi in zshrc
@@ -74,13 +70,13 @@ $(links): $(HOME)/%: %
 	@mkdir -p $(@D)
 	ln -fsr $< $@
 
-$(git-creds): $(apt)
+$(git-creds): | $(apt)
 	$(apt) install -y libsecret-1-0 libsecret-1-dev
 	sudo $(MAKE) -C /usr/share/doc/git/contrib/credential/libsecret
 
 ## ZSH
 ### oh-my-zsh
-$(oh-my-zsh): $(zsh) $(curl)
+$(oh-my-zsh): | $(zsh) $(curl)
 	curl -Lo /tmp/install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
 	-sh /tmp/install.sh --unattended
 	rm /tmp/install.sh
@@ -92,13 +88,13 @@ $(zsh-auto): $(oh-my-zsh)
 	git clone https://github.com/zsh-users/zsh-autosuggestions $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 ### zsh itself
-$(zsh): $(apt)
+$(zsh): | $(apt)
 	$(apt) install -y zsh
 	chsh -s /usr/bin/zsh
 	@echo Logout and back in to use zsh
 
 ## curl
-$(curl): $(apt)
+$(curl): | $(apt)
 	$(apt) install -y curl
 
 ## Apt-fast
