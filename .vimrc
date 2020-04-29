@@ -72,7 +72,7 @@ call plug#end()
 " Colorscheme
 " set t_Co=256                           " force 256 color support
 " let g:solarized_termcolors=256
-" set background=dark
+set background=dark
 " let g:solarized_visibility = "high"
 " let g:solarized_contrast = "high"
 " let g:solarized_termtrans = 1

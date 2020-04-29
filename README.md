@@ -5,7 +5,11 @@ Modified from geerlinguy
 ## quickstart
 
 # Ubuntu 18.x
-sudo apt-get git
+sudo apt-get update
+sudo apt-get install -y git make
+mkdir ~/git
+cd ~/git && git clone https://github.com/afirth/dotfiles
+cd dotfiles
 sudo make
 
 # OSX
