@@ -30,6 +30,23 @@ gcloud: $(curl)
 	sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-sdk -y'
 	$(warning run gcloud init)
 
+.PHONY: chrome
+chrome:
+	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O ~/Downloads/chrome.deb
+	sudo apt install ~/Downloads/chrome.deb
+
+.PHONY: zoom
+zoom:
+	wget https://zoom.us/client/latest/zoom_amd64.deb -O ~/Downloads/zoom.deb
+	sudo apt install ~/Downloads/zoom.deb
+
+.PHONY: hide-dock
+hide-dock:
+	gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
+	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
+	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
+	gsettings set org.gnome.desktop.background show-desktop-icons false
+
 .PHONY: capslock
 # so you can use the keyboard
 capslock: $(xinitrc)

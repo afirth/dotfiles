@@ -22,5 +22,5 @@ gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 
 swap capslock
-(gnome tweaks works)
+(gnome tweaks works), found it with dconf watch but cant get it to set
 or set xkboptions on login caps:swap
