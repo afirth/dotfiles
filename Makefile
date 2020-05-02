@@ -23,7 +23,15 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) gcloud $(git-creds) $(vim) $(tmux) $(curl) $(apt)
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(apt) gnome-desktop
+
+.PHONY: run-once
+run-once: apt-utils gcloud chrome zoom 
+
+## Not idempotent targets
+.PHONY: apt-utils
+apt-utils:
+	apt-fast install -y tree ack jq p7zip pavucontrol xclip
 
 .PHONY: gcloud
 gcloud: $(curl)
@@ -40,13 +48,6 @@ zoom:
 	wget https://zoom.us/client/latest/zoom_amd64.deb -O ~/Downloads/zoom.deb
 	sudo apt install ~/Downloads/zoom.deb
 
-.PHONY: hide-dock
-hide-dock:
-	gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
-	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
-	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
-	gsettings set org.gnome.desktop.background show-desktop-icons false
-
 .PHONY: capslock
 # so you can use the keyboard
 capslock: $(xinitrc)
@@ -58,6 +59,15 @@ $(xinitrc):
 	$(warning this does not work reliably, use gnome-tweaks)
 	echo setxkbmap -option caps:swapescape > $@
 	source $@
+
+## Idempotent targets
+
+.PHONY: gnome-desktop
+gnome-desktop:
+	gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
+	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
+	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
+	gsettings set org.gnome.desktop.background show-desktop-icons false
 
 ## GOLANG
 GO_VERSION := 1.14

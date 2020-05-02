@@ -16,10 +16,6 @@ docker add user to group
 
 hide top bar gnome extension
 
-hide dock:
-gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
-gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 
 swap capslock
 (gnome tweaks works), found it with dconf watch but cant get it to set
