@@ -17,6 +17,7 @@ curl := /usr/bin/curl
 docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
+hub := /snap/bin/hub
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
 tmux := /usr/bin/tmux
 vim := /usr/bin/vim
@@ -75,6 +76,9 @@ $(docker):
 	$(apt) install -y docker.io
 	sudo usermod -aG docker $(USER)
 	sudo systemctl enable --now docker
+
+$(hub):
+	sudo snap install hub --classic
 
 ## GOLANG
 GO_VERSION := 1.14
