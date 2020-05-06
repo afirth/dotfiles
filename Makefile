@@ -3,12 +3,13 @@ MAKEFLAGS += --warn-undefined-variables
 SHELL = /bin/bash
 .SUFFIXES:
 
-dotfiles = .bash_profile \
-        .gitconfig \
-        .oh-my-zsh/custom/themes/afirth.zsh-theme \
-        .tmux.conf \
-        .vimrc \
-        .zshrc
+dotfiles = .ackrc \
+           .bash_profile \
+           .gitconfig \
+           .oh-my-zsh/custom/themes/afirth.zsh-theme \
+           .tmux.conf \
+           .vimrc \
+           .zshrc
 links := $(patsubst %,$(HOME)/%,$(dotfiles))
 
 apt := /usr/bin/apt-fast
