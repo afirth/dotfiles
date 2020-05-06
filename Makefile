@@ -14,6 +14,7 @@ links := $(patsubst %,$(HOME)/%,$(dotfiles))
 
 apt := /usr/bin/apt-fast
 curl := /usr/bin/curl
+docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
@@ -24,7 +25,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(apt) gnome-desktop
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) gnome-desktop
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom 
@@ -69,6 +70,11 @@ gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 	gsettings set org.gnome.desktop.background show-desktop-icons false
+
+$(docker):
+	$(apt) install -y docker.io
+	sudo usermod -aG docker $(USER)
+	sudo systemctl enable --now docker
 
 ## GOLANG
 GO_VERSION := 1.14
