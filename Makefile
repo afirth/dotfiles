@@ -26,7 +26,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) gnome-desktop
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) gnome-desktop
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom 
