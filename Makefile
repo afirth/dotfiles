@@ -51,6 +51,12 @@ zoom:
 	wget https://zoom.us/client/latest/zoom_amd64.deb -O ~/Downloads/zoom.deb
 	sudo apt install ~/Downloads/zoom.deb
 
+.PHONY: sops
+SOPS_URL=$(shell curl -s "https://api.github.com/repos/mozilla/sops/releases/latest" | grep -o "http.*sops_.*_amd64\.deb")
+sops: $(curl)
+	wget $(SOPS_URL) -O ~/Downloads/sops.deb
+	sudo apt install ~/Downloads/sops.deb
+
 .PHONY: capslock
 # so you can use the keyboard
 capslock: $(xinitrc)
