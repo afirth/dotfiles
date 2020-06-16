@@ -18,6 +18,7 @@ docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
 hub := /snap/bin/hub
+kustomize := $(HOME)/.local/bin/kustomize
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
 tmux := /usr/bin/tmux
 vim := /usr/bin/vim
@@ -29,7 +30,7 @@ zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) gnome-desktop
 
 .PHONY: run-once
-run-once: apt-utils gcloud chrome zoom 
+run-once: apt-utils gcloud chrome zoom kustomize
 
 ## Not idempotent targets
 .PHONY: apt-utils
@@ -77,6 +78,13 @@ gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 	gsettings set org.gnome.desktop.background show-desktop-icons false
+
+kustomize: $(curl)
+	mkdir -p $(dir $(kustomize))
+	(cd $(dir $(kustomize)) \
+		&& curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" \
+		| bash )
+
 
 $(docker):
 	$(apt) install -y docker.io
