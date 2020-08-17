@@ -18,6 +18,7 @@ docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
 hub := /snap/bin/hub
+krew := $(HOME)/.krew/bin/kubectl-krew
 kustomize := $(HOME)/.local/bin/kustomize
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
 tmux := /usr/bin/tmux
@@ -78,6 +79,15 @@ gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 	gsettings set org.gnome.desktop.background show-desktop-icons false
+
+krew: $(curl)
+	( set -x; cd "$$(mktemp -d)" && \
+	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}" && \
+	tar zxvf krew.tar.gz && \
+	KREW=./krew-"$$(uname | tr '[:upper:]' '[:lower:]')_amd64" && \
+	"$$KREW" install --manifest=krew.yaml --archive=krew.tar.gz && \
+	"$$KREW" update \
+	)
 
 kustomize: $(curl)
 	mkdir -p $(dir $(kustomize))

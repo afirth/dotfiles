@@ -21,6 +21,9 @@ which linkerd > /dev/null && \
   source <(linkerd completion zsh)
   echo TODO fix linkerd completion
 
+# Krew
+export PATH=$PATH:$HOME/.krew/bin
+
 # Kubebuilder
 export PATH=$PATH:/usr/local/kubebuilder/bin
 
