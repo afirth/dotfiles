@@ -93,6 +93,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=60'
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  asdf
   common-aliases
   docker
   gcloud

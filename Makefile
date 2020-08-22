@@ -13,6 +13,7 @@ dotfiles = .ackrc \
 links := $(patsubst %,$(HOME)/%,$(dotfiles))
 
 apt := /usr/bin/apt-fast
+asdf := ~/.asdf
 curl := /usr/bin/curl
 docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
@@ -28,10 +29,10 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) gnome-desktop
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) gnome-desktop
 
 .PHONY: run-once
-run-once: apt-utils gcloud chrome zoom kustomize
+run-once: apt-utils gcloud chrome zoom kustomize sops
 
 ## Not idempotent targets
 .PHONY: apt-utils
@@ -72,6 +73,11 @@ $(xinitrc):
 	source $@
 
 ## Idempotent targets
+
+#https://asdf-vm.com/#/core-manage-asdf-vm
+.PHONY: asdf
+$(asdf): $(apt)
+	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0-rc1
 
 .PHONY: gnome-desktop
 gnome-desktop:
