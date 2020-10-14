@@ -135,6 +135,8 @@ alias ll='ls -laht'
 alias afiy='apt-fast install -y'
 alias pkzs='pkill zoom; pkill slack'
 
+alias dispsw='~/git/dotfiles/toggle-display.sh'
+
 # git branch creation
 unalias gcb
 function gcb {
