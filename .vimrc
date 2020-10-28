@@ -19,6 +19,7 @@ Plug 'tpope/vim-sensible' "sensible vim defaults
 Plug 'scrooloose/syntastic' " syntax checking for various filetypes
 Plug 'altercation/vim-colors-solarized' " the best colorscheme
 Plug 'tpope/vim-fugitive' " git wrapper
+Plug 'tpope/vim-abolish' " case-smart substitution with :S///, among other things
 
 "typescript
 autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
