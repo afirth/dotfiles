@@ -11,7 +11,7 @@ sudo apt-get install -y git make
 mkdir ~/git
 cd ~/git && git clone https://github.com/afirth/dotfiles
 cd dotfiles
-sudo make
+make
 ```
 
 # OSX
