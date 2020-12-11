@@ -18,6 +18,7 @@ curl := /usr/bin/curl
 docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
+gnome-tweaks := /usr/bin/gnome-tweaks
 hub := /snap/bin/hub
 krew := $(HOME)/.krew/bin/kubectl-krew
 kustomize := $(HOME)/.local/bin/kustomize
@@ -29,7 +30,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) gnome-desktop
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(gnome-tweaks) gnome-desktop
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops
@@ -64,6 +65,7 @@ sops: $(curl)
 # so you can use the keyboard
 capslock: $(xinitrc)
 
+
 # TODO
 #https://askubuntu.com/questions/1102641/run-a-command-on-start-up-please
 #https://bbs.archlinux.org/viewtopic.php?id=189989
@@ -74,8 +76,14 @@ $(xinitrc):
 
 ## Idempotent targets
 
+.PHONY: gnome-tweaks
+gnome-tweaks: $(gnome-tweaks)
+$(gnome-tweaks): $(apt)
+	$(apt) -y install gnome-tweak-tool
+
 #https://asdf-vm.com/#/core-manage-asdf-vm
 .PHONY: asdf
+asdf: $(asdf)
 $(asdf): $(apt)
 	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0-rc1
 
