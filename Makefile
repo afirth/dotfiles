@@ -30,7 +30,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(gnome-tweaks) gnome-desktop
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(gnome-tweaks) gnome-desktop capslock
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops
@@ -61,20 +61,13 @@ sops: $(curl)
 	wget $(SOPS_URL) -O ~/Downloads/sops.deb
 	sudo apt install ~/Downloads/sops.deb
 
-.PHONY: capslock
-# so you can use the keyboard
-capslock: $(xinitrc)
-
-
-# TODO
-#https://askubuntu.com/questions/1102641/run-a-command-on-start-up-please
-#https://bbs.archlinux.org/viewtopic.php?id=189989
-$(xinitrc):
-	$(warning this does not work reliably, use gnome-tweaks)
-	echo setxkbmap -option caps:swapescape > $@
-	source $@
-
 ## Idempotent targets
+
+# so you can use the keyboard
+# set with `dconf watch /` and then gnome-tweaks for whatever settings you like, then `gsettings list-recursively| grep xkb`
+.PHONY: capslock
+capslock:
+	gsettings set org.gnome.desktop.input-sources xkb-options "['lv3:ralt_switch_multikey', 'eurosign:5', 'caps:escape_shifted_capslock']"
 
 .PHONY: gnome-tweaks
 gnome-tweaks: $(gnome-tweaks)
