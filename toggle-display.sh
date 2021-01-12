@@ -4,7 +4,7 @@ set -eux -o pipefail
 #toggle between single and dual monitor, even if 2nd monitor is plugged in
 
 INTERNAL=eDP-1
-EXTERNAL=DP-1-1
+EXTERNAL=HDMI-1
 
 xrandr | grep "$EXTERNAL disconnected" > /dev/null \
     && xrandr --output $INTERNAL --auto \
