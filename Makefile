@@ -14,6 +14,7 @@ links := $(patsubst %,$(HOME)/%,$(dotfiles))
 
 apt := /usr/bin/apt-fast
 asdf := ~/.asdf
+aws := /usr/local/bin/aws
 curl := /usr/bin/curl
 docker := /usr/bin/docker
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
@@ -30,7 +31,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(gnome-tweaks) gnome-desktop capslock
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops
@@ -80,6 +81,14 @@ asdf: $(asdf)
 $(asdf): $(apt)
 	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0-rc1
 
+#https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install
+.PHONY: aws
+aws: $(aws)
+$(aws): $(curl)
+	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+	unzip /tmp/awscliv2.zip -d /tmp/
+	sudo /tmp/aws/install
+
 .PHONY: gnome-desktop
 gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
@@ -87,7 +96,9 @@ gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 	gsettings set org.gnome.desktop.background show-desktop-icons false
 
-krew: $(curl)
+.PHONY: krew
+krew: $(krew)
+$(krew): $(curl)
 	( set -x; cd "$$(mktemp -d)" && \
 	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}" && \
 	tar zxvf krew.tar.gz && \
@@ -96,7 +107,10 @@ krew: $(curl)
 	"$$KREW" update \
 	)
 
-kustomize: $(curl)
+
+.PHONY: kustomize
+kustomize: $(kustomize)
+$(kustomize): $(curl)
 	mkdir -p $(dir $(kustomize))
 	(cd $(dir $(kustomize)) \
 		&& curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" \
