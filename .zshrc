@@ -136,6 +136,7 @@ alias afiy='apt-fast install -y'
 alias pkzs='pkill zoom; pkill slack'
 
 alias dispsw='~/git/dotfiles/toggle-display.sh'
+alias f-aws-login="docker run --rm -it -e AWS_PROFILE=default -v ~/.aws:/root/.aws dtjohnson/aws-azure-login --no-prompt"
 
 # git branch creation
 unalias gcb
