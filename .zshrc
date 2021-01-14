@@ -200,3 +200,6 @@ NEWLINE=$'\n'
 KUBE_PS1_SYMBOL_ENABLE=true
 #shorten cluster name
 PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}'$ '
+
+# term prefs -> profiles -> show bold text in bright colors
+zle_highlight=(default:bold)
