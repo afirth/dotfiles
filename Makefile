@@ -23,6 +23,8 @@ gnome-tweaks := /usr/bin/gnome-tweaks
 hub := /snap/bin/hub
 krew := $(HOME)/.krew/bin/kubectl-krew
 kustomize := $(HOME)/.local/bin/kustomize
+kubectl := $(HOME)/.local/bin/kubectl
+kubectl_version = v1.15.0
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
 tmux := /usr/bin/tmux
 vim := /usr/bin/vim
@@ -107,6 +109,15 @@ $(krew): $(curl)
 	"$$KREW" update \
 	)
 
+
+#not installed by default, may come with provider CLI
+
+.PHONY: kubectl
+kubectl: $(kubectl)
+$(kubectl): $(curl)
+	curl -L https://storage.googleapis.com/kubernetes-release/release/$(kubectl_version)/bin/linux/amd64/kubectl -o /tmp/kubectl
+	mv /tmp/kubectl $(kubectl)
+	chmod +x $(kubectl)
 
 .PHONY: kustomize
 kustomize: $(kustomize)
