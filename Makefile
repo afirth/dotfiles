@@ -5,6 +5,8 @@ SHELL = /bin/bash
 
 dotfiles = .ackrc \
            .bash_profile \
+           .config/autostart/inputplug.desktop \
+           .local/bin/on-new-kbd.sh \
            .gitconfig \
            .oh-my-zsh/custom/themes/afirth.zsh-theme \
            .tmux.conf \
@@ -70,7 +72,8 @@ sops: $(curl)
 # set with `dconf watch /` and then gnome-tweaks for whatever settings you like, then `gsettings list-recursively| grep xkb`
 .PHONY: capslock
 capslock:
-	gsettings set org.gnome.desktop.input-sources xkb-options "['lv3:ralt_switch_multikey', 'eurosign:5', 'caps:escape_shifted_capslock']"
+	$(apt) -y install inputplug
+	inputplug -d -c ~/.local/bin/on-new-kbd.sh &
 
 .PHONY: gnome-tweaks
 gnome-tweaks: $(gnome-tweaks)
