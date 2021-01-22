@@ -8,6 +8,7 @@ dotfiles = .ackrc \
            .config/autostart/inputplug.desktop \
            .local/bin/on-new-kbd.sh \
            .gitconfig \
+           .gitignore \
            .oh-my-zsh/custom/themes/afirth.zsh-theme \
            .tmux.conf \
            .vimrc \
