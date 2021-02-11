@@ -20,6 +20,7 @@ asdf := ~/.asdf
 aws := /usr/local/bin/aws
 curl := /usr/bin/curl
 docker := /usr/bin/docker
+eksctl := $(HOME)/.local/bin/eksctl
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
 gnome-tweaks := /usr/bin/gnome-tweaks
@@ -122,6 +123,11 @@ $(kubectl): $(curl)
 	curl -L https://storage.googleapis.com/kubernetes-release/release/$(kubectl_version)/bin/linux/amd64/kubectl -o /tmp/kubectl
 	mv /tmp/kubectl $(kubectl)
 	chmod +x $(kubectl)
+
+
+.PHONY: eksctl
+eksctl: $(eksctl)
+ curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C ~/.local/bin/
 
 .PHONY: kustomize
 kustomize: $(kustomize)
