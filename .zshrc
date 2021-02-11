@@ -94,6 +94,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=60'
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   asdf
+  aws
   common-aliases
   docker
   gcloud
@@ -131,6 +132,8 @@ source $ZSH/oh-my-zsh.sh
 
 alias zzz="systemctl suspend -i"
 alias ll='ls -laht'
+#preserve aliases in watch commands. can't pass args though
+alias wat='watch '
 
 alias afiy='apt-fast install -y'
 alias pkzs='pkill zoom; pkill slack'
@@ -199,7 +202,8 @@ setopt extendedglob
 NEWLINE=$'\n'
 KUBE_PS1_SYMBOL_ENABLE=true
 #shorten cluster name
-PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}'$ '
+# PROMPT=$PROMPT'$(echo -n "$AWS_PROFILE ")''$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}'$ '
+PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")$(aws_prompt_info)'${NEWLINE}'$ '
 
 # term prefs -> profiles -> show bold text in bright colors
 zle_highlight=(default:bold)
