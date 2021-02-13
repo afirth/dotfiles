@@ -40,12 +40,15 @@ zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
 
 .PHONY: run-once
-run-once: apt-utils gcloud chrome zoom kustomize sops
+run-once: apt-utils gcloud chrome zoom kustomize sops gnome-extensions
 
 ## Not idempotent targets
 .PHONY: apt-utils
 apt-utils:
 	apt-fast install -y tree ack jq p7zip pavucontrol xclip
+
+.PHONY: gnome-extensions
+gnome-extensions: gtile hidetopbar
 
 .PHONY: gcloud
 gcloud: $(curl)
@@ -204,3 +207,11 @@ $(apt):
 	sudo add-apt-repository -y ppa:apt-fast/stable
 	sudo apt-get update
 	sudo apt-get -y install apt-fast
+
+hidetopbar:
+	./install-gnome-extensions.sh --enable 545
+	dconf load /org/gnome/shell/extensions/$@/ < ./$@.dconf
+
+gtile:
+	./install-gnome-extensions.sh --enable 28
+	dconf load /org/gnome/shell/extensions/$@/ < ./$@.dconf
