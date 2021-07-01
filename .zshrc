@@ -208,3 +208,8 @@ PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")$(aws_prompt_info)'${NEWLINE}'$
 # term prefs -> profiles -> show bold text in bright colors
 zle_highlight=(default:bold)
 if [ ! "$TMUX" = "" ]; then export TERM=xterm-256color; fi #https://github.com/zsh-users/zsh-autosuggestions/issues/229
+
+
+fpath=($fpath ~/.zsh/completion)
+autoload -U compinit
+compinit
