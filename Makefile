@@ -129,8 +129,13 @@ $(kubectl): $(curl)
 
 
 .PHONY: eksctl
+UNAMES=$(shell uname -s)
 eksctl: $(eksctl)
- curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C ~/.local/bin/
+$(eksctl): $(curl)
+	UNAME="$$(uname -s)" && \
+	curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(UNAMES)_amd64.tar.gz" | tar xz -C ~/.local/bin/
+	mkdir -p ~/.zsh/completion/
+	eksctl completion zsh > ~/.zsh/completion/_eksctl
 
 .PHONY: kustomize
 kustomize: $(kustomize)
