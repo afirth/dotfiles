@@ -45,7 +45,9 @@ Plug 'ervandew/supertab' "autocomplete with tab
 "Plug 'jgdavey/tslime.vim' " send commands to tmux
 
 " Folding, comments, and formatting plugins
-Plug 'avakhov/vim-yaml', { 'for': 'yaml' } " autoformat yaml
+" Plug 'avakhov/vim-yaml', { 'for': 'yaml' } " autoformat yaml
+let g:syntastic_yaml_checkers = [ "yamllint" ] " pip package
+let g:syntastic_quiet_messages = { "type": "style", "file:e": "yaml"  }
 Plug 'tmhedberg/SimpylFold' "folding
 Plug 'davidhalter/jedi-vim', { 'for': 'python' }  "autocomplete, esp for python
 Plug 'scrooloose/nerdcommenter' " Comment blocks: \c<space> to toggle
@@ -78,6 +80,7 @@ call plug#end()
 " set t_Co=256                           " force 256 color support
 " let g:solarized_termcolors=256
 " set background=dark
+set background& "autodetect
 " let g:solarized_visibility = "high"
 " let g:solarized_contrast = "high"
 " let g:solarized_termtrans = 1
