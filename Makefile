@@ -18,6 +18,7 @@ links := $(patsubst %,$(HOME)/%,$(dotfiles))
 apt := /usr/bin/apt-fast
 asdf := ~/.asdf
 aws := /usr/local/bin/aws
+copyq := /usr/bin/copyq
 curl := /usr/bin/curl
 docker := /usr/bin/docker
 eksctl := $(HOME)/.local/bin/eksctl
@@ -84,6 +85,11 @@ capslock:
 gnome-tweaks: $(gnome-tweaks)
 $(gnome-tweaks): $(apt)
 	$(apt) -y install gnome-tweak-tool
+
+.PHONY: copyq
+copyq: $(copyq)
+$(copyq): $(apt)
+	$(apt) -y install copyq copyq-plugins copyq-doc
 
 #https://asdf-vm.com/#/core-manage-asdf-vm
 .PHONY: asdf
