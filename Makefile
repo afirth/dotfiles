@@ -22,10 +22,11 @@ copyq := /usr/bin/copyq
 curl := /usr/bin/curl
 docker := /usr/bin/docker
 eksctl := $(HOME)/.local/bin/eksctl
+gh := /usr/bin/gh
+gh-apt-repo := /etc/apt/sources.list.d/github-cli.list
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 golang := /usr/local/bin/go
 gnome-tweaks := /usr/bin/gnome-tweaks
-hub := /snap/bin/hub
 krew := $(HOME)/.krew/bin/kubectl-krew
 kustomize := $(HOME)/.local/bin/kustomize
 kubectl := $(HOME)/.local/bin/kubectl
@@ -38,7 +39,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(hub) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops gnome-extensions
@@ -85,6 +86,17 @@ capslock:
 gnome-tweaks: $(gnome-tweaks)
 $(gnome-tweaks): $(apt)
 	$(apt) -y install gnome-tweak-tool
+
+# github cli
+.PHONY: gh
+gh: $(gh)
+$(gh): $(apt) $(gh-apt-repo)
+	$(apt) -y install gh
+
+$(gh-apt-repo):
+	curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+	echo "deb [arch=$(shell dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+	$(apt) update
 
 .PHONY: copyq
 copyq: $(copyq)
@@ -157,10 +169,8 @@ $(docker):
 	sudo usermod -aG docker $(USER)
 	sudo systemctl enable --now docker
 
-$(hub):
-	sudo snap install hub --classic
-
 ## GOLANG
+## mostly use asdf go shim now
 GO_VERSION := 1.14
 $(golang): /usr/local/go
 	sudo ln -fs /usr/local/go/bin/go /usr/local/bin
