@@ -18,6 +18,7 @@ links := $(patsubst %,$(HOME)/%,$(dotfiles))
 apt := /usr/bin/apt-fast
 asdf := ~/.asdf
 aws := /usr/local/bin/aws
+cmake := /usr/bin/cmake
 copyq := /usr/bin/copyq
 curl := /usr/bin/curl
 docker := /usr/bin/docker
@@ -39,7 +40,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops gnome-extensions
@@ -81,6 +82,11 @@ sops: $(curl)
 capslock:
 	$(apt) -y install inputplug
 	inputplug -d -c ~/.local/bin/on-new-kbd.sh &
+
+.PHONY: cmake
+cmake: $(cmake)
+$(cmake): $(apt)
+	$(apt) -y install cmake
 
 .PHONY: gnome-tweaks
 gnome-tweaks: $(gnome-tweaks)
