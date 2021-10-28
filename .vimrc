@@ -21,6 +21,15 @@ Plug 'altercation/vim-colors-solarized' " the best colorscheme
 Plug 'tpope/vim-fugitive' " git wrapper
 Plug 'tpope/vim-abolish' " case-smart substitution with :S///, among other things
 
+" autocomplete - https://github.com/ycm-core/YouCompleteMe/issues/1751
+" requires cmake, golang, etc
+function! BuildYCM(info)
+  if a:info.status == 'installed' || a:info.force
+    !./install.py --clang-completer --go-completer --ts-completer
+  endif
+endfunction
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+
 "typescript
 autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
@@ -39,9 +48,6 @@ Plug 'fatih/vim-go', { 'for': 'go'}
 Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh', 'for': 'go' }
 let g:go_addtags_transform="camelcase" " json tags in camelCase instead of snake_case, required for kube
 
-Plug 'ervandew/supertab' "autocomplete with tab
-":set completeopt=longest,menuone
-
 "Plug 'jgdavey/tslime.vim' " send commands to tmux
 
 " Folding, comments, and formatting plugins
@@ -49,7 +55,6 @@ Plug 'ervandew/supertab' "autocomplete with tab
 let g:syntastic_yaml_checkers = [ "yamllint" ] " pip package
 let g:syntastic_quiet_messages = { "type": "style", "file:e": "yaml"  }
 Plug 'tmhedberg/SimpylFold' "folding
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }  "autocomplete, esp for python
 Plug 'scrooloose/nerdcommenter' " Comment blocks: \c<space> to toggle
 let g:NERDSpaceDelims = 1
 
