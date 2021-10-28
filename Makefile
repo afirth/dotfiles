@@ -92,6 +92,8 @@ $(gnome-tweaks): $(apt)
 gh: $(gh)
 $(gh): $(apt) $(gh-apt-repo)
 	$(apt) -y install gh
+	mkdir -p $(HOME)/.oh-my-zsh/completions/
+	gh completion -s zsh > $(HOME)/.oh-my-zsh/completions/_gh
 
 $(gh-apt-repo):
 	curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
