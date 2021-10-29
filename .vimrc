@@ -18,17 +18,45 @@ Plug 'tpope/vim-sensible' "sensible vim defaults
 " assorted plugins
 Plug 'scrooloose/syntastic' " syntax checking for various filetypes
 Plug 'altercation/vim-colors-solarized' " the best colorscheme
-Plug 'tpope/vim-fugitive' " git wrapper
+"GUARD
 Plug 'tpope/vim-abolish' " case-smart substitution with :S///, among other things
 
-" autocomplete - https://github.com/ycm-core/YouCompleteMe/issues/1751
-" requires cmake, golang, etc
-function! BuildYCM(info)
-  if a:info.status == 'installed' || a:info.force
-    !./install.py --clang-completer --go-completer --ts-completer
-  endif
-endfunction
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+"NVIM INCOMPATIBLE
+if !has('nvim')
+  Plug 'tpope/vim-fugitive' " git wrapper
+  " autocomplete - https://github.com/ycm-core/YouCompleteMe/issues/1751
+  " requires cmake, golang, etc
+  function! BuildYCM(info)
+    if a:info.status == 'installed' || a:info.force
+      !./install.py --clang-completer --go-completer --ts-completer
+    endif
+  endfunction
+  Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+
+
+  "" Clipboard
+  " :version must have +clipboard. Use vim, not vi, on osx homebrew. vim 7.4+
+  "" Linux apt-get install vim-gtk; alias vi=vim
+  set clipboard=autoselect,unnamedplus
+  " allow yy, etc. to interact with OS X clipboard
+
+  "fix scrolling in iterm
+  set mouse=a
+  if has("mouse_sgr")
+    set ttymouse=sgr
+  else
+    set ttymouse=xterm2
+  end
+endif
+"END NVIM INCOMPATIBLE
+
+"NVIM ONLY
+Plug 'github/copilot.vim'
+
+let g:copilot_filetypes = {
+      \ 'yaml': v:true,
+      \ }
+"END NVIM ONLY
 
 "typescript
 autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
@@ -84,8 +112,8 @@ call plug#end()
 " Colorscheme
 " set t_Co=256                           " force 256 color support
 " let g:solarized_termcolors=256
-" set background=dark
-set background& "autodetect
+set background=dark
+" set background& "autodetect
 " let g:solarized_visibility = "high"
 " let g:solarized_contrast = "high"
 " let g:solarized_termtrans = 1
@@ -164,21 +192,6 @@ set wildignore+=*.o,*.obj,*.swp,.git,.svn,tmp,log,.sass-cache,public,coverage,te
 
 "" Other
 set nobackup            " don't create pointless backup files; Use VCS instead
-
-"fix scrolling in iterm
-set mouse=a
-if has("mouse_sgr")
-    set ttymouse=sgr
-else
-    set ttymouse=xterm2
-end
-
-
-"" Clipboard
-" :version must have +clipboard. Use vim, not vi, on osx homebrew. vim 7.4+
-"" Linux apt-get install vim-gtk; alias vi=vim
-set clipboard=autoselect,unnamedplus
-" allow yy, etc. to interact with OS X clipboard
 
 
 "" Mappings
