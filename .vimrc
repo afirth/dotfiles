@@ -51,11 +51,16 @@ endif
 "END NVIM INCOMPATIBLE
 
 "NVIM ONLY
-Plug 'github/copilot.vim'
+if has('nvim')
+  Plug 'github/copilot.vim'
 
-let g:copilot_filetypes = {
-      \ 'yaml': v:true,
-      \ }
+  let g:copilot_filetypes = {
+        \ 'yaml': v:true,
+        \ }
+
+  set mouse=a
+  set clipboard=unnamedplus " autoselect waiting for https://github.com/neovim/neovim/issues/2325
+endif
 "END NVIM ONLY
 
 "typescript

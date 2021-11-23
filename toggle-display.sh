@@ -8,6 +8,8 @@ EXTERNAL=HDMI-1
 
 xrandr | grep "$EXTERNAL disconnected" > /dev/null \
     && xrandr --output $INTERNAL --auto \
-  || xrandr --listactivemonitors | grep $EXTERNAL > /dev/null \
-    && xrandr --output $EXTERNAL --off --output $INTERNAL --auto \
-  || xrandr --output $EXTERNAL --auto --output $INTERNAL --right-of $EXTERNAL
+    || xrandr --listactivemonitors | grep $EXTERNAL > /dev/null \
+      && xrandr --output $EXTERNAL --off --output $INTERNAL --auto \
+      || xrandr --output $EXTERNAL --auto --output $INTERNAL --right-of $EXTERNAL
+    # && xrandr --output $INTERNAL --auto --scale 2x2 \
+      # && xrandr --output $EXTERNAL --off --output $INTERNAL --auto --scale 2x2 \
