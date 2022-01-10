@@ -13,13 +13,12 @@ which go > /dev/null && \
   export PATH=$GOPATH/bin:$PATH
   export PATH=/usr/local/go/bin:$PATH #for ubuntu go install
 
-
-# Linkerd
-export PATH=$PATH:$HOME/.linkerd2/bin
-which linkerd > /dev/null && \
-  # linkerd completion zsh > "${fpath[1]}/_linkerd"
-  source <(linkerd completion zsh)
-  echo TODO fix linkerd completion
+# # Linkerd
+# export PATH=$PATH:$HOME/.linkerd2/bin
+# which linkerd > /dev/null && \
+#   # linkerd completion zsh > "${fpath[1]}/_linkerd"
+#   source <(linkerd completion zsh)
+#   echo TODO fix linkerd completion
 
 # Krew
 export PATH=$PATH:$HOME/.krew/bin
