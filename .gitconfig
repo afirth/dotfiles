@@ -20,3 +20,5 @@
   textconv = sops -d
 [hub]
   protocol = https
+[diff]
+	tool = vimdiff

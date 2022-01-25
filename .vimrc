@@ -96,6 +96,14 @@ Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for vari
 set listchars=tab:▸ ,trail:-,extends:>,precedes:<,nbsp:¿
 
 " Markdown
+
+" Enable spellcheck
+" ]s for next word
+" zg to add word to spellfile
+" zx for suggestions
+" :h spell
+autocmd FileType markdown setlocal spell spelllang=en_us
+
 Plug 'godlygeek/tabular', { 'for': 'markdown' }
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 let g:vim_markdown_new_list_item_indent = 0 " don't indent list items
