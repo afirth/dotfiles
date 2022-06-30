@@ -114,7 +114,7 @@ source $ZSH/oh-my-zsh.sh
  if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
  else
-   export EDITOR='vim'
+   export EDITOR='nvim'
  fi
 
 # Compilation flags
@@ -152,7 +152,7 @@ function gcb {
   git checkout -b `date +%F`-"$1"
 }
 
-alias vi='vim'
+alias vi='nvim'
 alias drsh='docker run --rm -it --entrypoint=sh'
 
 #kube stuff

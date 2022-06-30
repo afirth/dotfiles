@@ -18,7 +18,6 @@ Plug 'tpope/vim-sensible' "sensible vim defaults
 " assorted plugins
 Plug 'scrooloose/syntastic' " syntax checking for various filetypes
 Plug 'altercation/vim-colors-solarized' " the best colorscheme
-"GUARD
 Plug 'tpope/vim-abolish' " case-smart substitution with :S///, among other things
 
 "NVIM INCOMPATIBLE
@@ -60,6 +59,12 @@ if has('nvim')
 
   set mouse=a
   set clipboard=unnamedplus " autoselect waiting for https://github.com/neovim/neovim/issues/2325
+
+  " Correctly use gnome-term background color (only works in nvim)
+  if (has("termguicolors"))
+   " set termguicolors
+  endif
+  let g:solarized_termtrans = 1
 endif
 "END NVIM ONLY
 
@@ -125,12 +130,13 @@ call plug#end()
 " Colorscheme
 " set t_Co=256                           " force 256 color support
 " let g:solarized_termcolors=256
-set background=dark
-" set background& "autodetect
+" set background=dark
+" set background& "autodetect " doesn't work in gnome+tmux in stock vim with solarized
 " let g:solarized_visibility = "high"
 " let g:solarized_contrast = "high"
-" let g:solarized_termtrans = 1
-colorscheme solarized
+" let g:solarized_termtrans = 0
+colorscheme solarized " note bg detection broken in stock vim. use neovim or default colorscheme, or set manually
+call togglebg#map("<F5>") " bind f5 to toggle light/dark
 
 "" File handling
 set encoding=utf-8
