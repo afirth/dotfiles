@@ -194,6 +194,7 @@ $(vim):
 $(tmux):
 	which tmux || $(apt) -y install tmux
 	git clone https://github.com/tmux-plugins/tpm $(HOME)/.tmux/plugins/tpm
+	@echo you may want to install tmux>=3.3 with asdf. requires bison, ncurses-dev, and flex
 
 ## dotfile links
 # depends on zsh because otherwise zsh install breaks

@@ -60,11 +60,6 @@ if has('nvim')
   set mouse=a
   set clipboard=unnamedplus " autoselect waiting for https://github.com/neovim/neovim/issues/2325
 
-  " Correctly use gnome-term background color (only works in nvim)
-  if (has("termguicolors"))
-   " set termguicolors
-  endif
-  let g:solarized_termtrans = 1
 endif
 "END NVIM ONLY
 
@@ -98,7 +93,8 @@ let g:NERDSpaceDelims = 1
 
 Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for variable alignment
 "to use: :RetabIndent[!]
-set listchars=tab:▸ ,trail:-,extends:>,precedes:<,nbsp:¿
+set listchars=tab:▻\ ,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+
 
 " Markdown
 
@@ -128,15 +124,24 @@ call plug#end()
 " Regular config resumes here
 
 " Colorscheme
-" set t_Co=256                           " force 256 color support
-" let g:solarized_termcolors=256
-" set background=dark
-" set background& "autodetect " doesn't work in gnome+tmux in stock vim with solarized
-" let g:solarized_visibility = "high"
-" let g:solarized_contrast = "high"
-" let g:solarized_termtrans = 0
-colorscheme solarized " note bg detection broken in stock vim. use neovim or default colorscheme, or set manually
-call togglebg#map("<F5>") " bind f5 to toggle light/dark
+" let g:solarized_termcolors=256 " mediocre colors - use if termcolors are terrible
+if (has("termguicolors"))
+  " term pallete must be solarized for this to look ok
+  " set termguicolors "i prefer the plugin's solarized palette over gnome's
+  let g:solarized_termtrans=1
+  let g:foo=1
+endif
+
+" workaround for tmux https://github.com/tmux/tmux/pull/2343 - relies on gtk theme name
+let s:bg = system('gsettings get org.gnome.desktop.interface gtk-theme | grep -iq dark && echo -n dark')
+if s:bg == "dark"
+  set background=dark
+else
+  set background=light
+endif
+
+colorscheme solarized
+highlight CursorLineNr cterm=standout term=standout
 
 "" File handling
 set encoding=utf-8
@@ -188,9 +193,6 @@ set list                " since we have sensible tab displays now
 
 "" Bells
 set vb t_vb=            " disable all error bells and flashing
-"set noerrorbells       " turn off audio bell
-"set visualbell         " but leave on a visual bell
-
 
 "" Search
 " Fuzzy finding (\t)
