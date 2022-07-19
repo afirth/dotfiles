@@ -94,7 +94,7 @@ alias pkzs='pkill zoom; pkill slack'
 
 alias history='omz_history -i'
 
-alias dispsw='~/git/dotfiles/toggle-display.sh'
+alias dispsw='~/git/afirth/dotfiles/toggle-display.sh'
 
 ## theme switching
 light_theme='NumixSolarizedLightBlue'
