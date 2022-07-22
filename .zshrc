@@ -95,6 +95,8 @@ alias pkzs='pkill zoom; pkill slack'
 alias history='omz_history -i'
 
 alias dispsw='~/git/afirth/dotfiles/toggle-display.sh'
+alias dispex='xrandr --output HDMI-1 --auto --primary --output eDP-1 --off'
+alias dispint='xrandr --output eDP-1 --auto --primary --output HDMI-1 --off'
 
 ## theme switching
 light_theme='NumixSolarizedLightBlue'
