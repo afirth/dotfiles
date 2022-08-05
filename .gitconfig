@@ -22,3 +22,5 @@
   protocol = https
 [diff]
 	tool = vimdiff
+[init]
+	defaultBranch = main
