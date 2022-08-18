@@ -115,7 +115,7 @@ $(copyq): $(apt)
 .PHONY: asdf
 asdf: $(asdf)
 $(asdf): $(apt)
-	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.8.0-rc1
+	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2-rc1
 
 #https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install
 .PHONY: aws
