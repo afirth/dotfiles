@@ -175,11 +175,22 @@ setopt extendedglob
 
 ## prompt
 # add kubectx info to prompt
+# cluster shown in red if ~= production
+# aws profile shown if not default
 NEWLINE=$'\n'
 KUBE_PS1_SYMBOL_ENABLE=true
-#shorten cluster name
-# PROMPT=$PROMPT'$(echo -n "$AWS_PROFILE ")''$(kube_ps1 | sed "s/gke.*_/gke_/")'${NEWLINE}'$ '
-PROMPT=$PROMPT'$(kube_ps1 | sed "s/gke.*_/gke_/")$(aws_prompt_info)'${NEWLINE}'$ '
+KUBE_PS1_CTX_COLOR="green"
+function prompt_get_cluster() {
+  # echo "$1" | cut -d . -f1 # e.g. to shorten
+  # but set color if prod
+  if [[ "$1" != *"production"* ]]; then
+    echo "$1" # preserve color
+  else
+    echo "%{$fg[red]%}!! $1 !!" # color (red)
+  fi
+}
+KUBE_PS1_CLUSTER_FUNCTION=prompt_get_cluster
+PROMPT=$PROMPT'$(kube_ps1)$(aws_prompt_info)'${NEWLINE}'$ '
 
 # term prefs -> profiles -> show bold text in bright colors
 zle_highlight=(default:bold)
