@@ -26,6 +26,9 @@ export PATH=$PATH:$HOME/.krew/bin
 # Kubebuilder
 export PATH=$PATH:/usr/local/kubebuilder/bin
 
+# Pip3 packs
+# export PATH=$PATH:$HOME/.asdf/installs/python/3.10.7/lib/python3.10/site-packages
+
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -206,3 +209,10 @@ PERL5LIB="/home/afirth/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LI
 PERL_LOCAL_LIB_ROOT="/home/afirth/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
 PERL_MB_OPT="--install_base \"/home/afirth/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/afirth/perl5"; export PERL_MM_OPT;
+
+alias kcuc-prod='kubectl config set current-context platform-production'
+alias kcuc-dev='kubectl config set current-context platform-development'
+
+export AWS_CONFIG_FILE=/home/afirth/.aws/fatmap-config
+alias fm-mfa-engineering='awsume fatmap-default-engineering -o fatmap-default && awsume -u'
+alias fm-mfa-terraform='awsume fatmap-root-terraform --role-duration 3600'

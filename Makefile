@@ -26,13 +26,21 @@ eksctl := $(HOME)/.local/bin/eksctl
 gh := /usr/bin/gh
 gh-apt-repo := /etc/apt/sources.list.d/github-cli.list
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
-golang := /usr/local/bin/go
 gnome-tweaks := /usr/bin/gnome-tweaks
-krew := $(HOME)/.krew/bin/kubectl-krew
-kustomize := $(HOME)/.local/bin/kustomize
-kubectl := $(HOME)/.local/bin/kubectl
-kubectl_version = v1.15.12
+golang := /usr/local/bin/go
+krew := $(HOME)/.asdf/shims/kubectl-krew
+krew_version = 0.4.3
+kubectl := $(HOME)/.asdf/shims/kubectl
+kubectl_version = 1.21.14
+kustomize := $(HOME)/.asdf/shims/kustomize
+kustomize_version = v1.21.14
+nodejs := $(HOME)/.asdf/shims/nodejs
+nodejs_version := 17.9.1
+nvim := /usr/bin/vim
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
+python := $(HOME)/.asdf/shims/python
+skaffold := $(HOME)/.asdf/shims/skaffold
+skaffold_version = 1.39.3
 tmux := /usr/bin/tmux
 vim := /usr/bin/vim
 xinitrc := $(HOME)/.xinitrc
@@ -40,7 +48,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) gnome-desktop capslock
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) $(copyq) gnome-desktop capslock $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops gnome-extensions
@@ -66,7 +74,7 @@ chrome:
 .PHONY: zoom
 zoom:
 	wget https://zoom.us/client/latest/zoom_amd64.deb -O ~/Downloads/zoom.deb
-	sudo apt install ~/Downloads/zoom.deb
+	sudo apt install ~/Downloads/zoom.deb --yes
 
 .PHONY: sops
 SOPS_URL=$(shell curl -s "https://api.github.com/repos/mozilla/sops/releases/latest" | grep -o "http.*sops_.*_amd64\.deb")
@@ -91,7 +99,7 @@ $(cmake): $(apt)
 .PHONY: gnome-tweaks
 gnome-tweaks: $(gnome-tweaks)
 $(gnome-tweaks): $(apt)
-	$(apt) -y install gnome-tweak-tool
+	$(apt) -y install gnome-tweaks
 
 # github cli
 .PHONY: gh
@@ -115,7 +123,15 @@ $(copyq): $(apt)
 .PHONY: asdf
 asdf: $(asdf)
 $(asdf): $(apt)
-	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2-rc1
+	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
+
+.PHONY: python
+python: $(python)
+$(python): $(asdf) $(apt)
+	afiy libssl-dev
+	-asdf plugin-add python
+	asdf install python latest
+	asdf global python latest
 
 #https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install
 .PHONY: aws
@@ -132,27 +148,41 @@ gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 	gsettings set org.gnome.desktop.background show-desktop-icons false
 
-.PHONY: krew
-krew: $(krew)
-$(krew): $(curl)
-	( set -x; cd "$$(mktemp -d)" && \
-	curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew.{tar.gz,yaml}" && \
-	tar zxvf krew.tar.gz && \
-	KREW=./krew-"$$(uname | tr '[:upper:]' '[:lower:]')_amd64" && \
-	"$$KREW" install --manifest=krew.yaml --archive=krew.tar.gz && \
-	"$$KREW" update \
-	)
-
-
-#not installed by default, may come with provider CLI
+.PHONY: nodejs
+nodejs: $(nodejs)
+$(nodejs): $(asdf)
+	-asdf plugin-add nodejs
+	asdf install nodejs $(nodejs_version)
+	asdf global nodejs $(nodejs_version)
 
 .PHONY: kubectl
 kubectl: $(kubectl)
-$(kubectl): $(curl)
-	curl -L https://storage.googleapis.com/kubernetes-release/release/$(kubectl_version)/bin/linux/amd64/kubectl -o /tmp/kubectl
-	mv /tmp/kubectl $(kubectl)
-	chmod +x $(kubectl)
+$(kubectl): $(asdf)
+	-asdf plugin-add kubectl
+	asdf install kubectl $(kubectl_version)
+	asdf global kubectl $(kubectl_version)
 
+# it l
+.PHONY: krew
+krew: $(krew)
+$(krew): $(asdf)
+	-asdf plugin-add krew
+	asdf install krew $(krew_version)
+	asdf global krew $(krew_version)
+
+.PHONY: kustomize
+kustomize: $(kustomize)
+$(kustomize): $(asdf)
+	-asdf plugin-add kustomize
+	asdf install kustomize $(kustomize_version)
+	asdf global kustomize $(kustomize_version)
+
+.PHONY: skaffold
+skaffold: $(skaffold)
+$(skaffold): $(asdf)
+	-asdf plugin-add skaffold
+	asdf install skaffold $(skaffold_version)
+	asdf global skaffold $(skaffold_version)
 
 .PHONY: eksctl
 UNAMES=$(shell uname -s)
@@ -162,15 +192,6 @@ $(eksctl): $(curl)
 	curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(UNAMES)_amd64.tar.gz" | tar xz -C ~/.local/bin/
 	mkdir -p ~/.zsh/completion/
 	eksctl completion zsh > ~/.zsh/completion/_eksctl
-
-.PHONY: kustomize
-kustomize: $(kustomize)
-$(kustomize): $(curl)
-	mkdir -p $(dir $(kustomize))
-	(cd $(dir $(kustomize)) \
-		&& curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" \
-		| bash )
-
 
 $(docker):
 	$(apt) install -y docker.io

@@ -1,0 +1,72 @@
+awsume
+
+# skaffold
+
+
+# nvim
+sudo apt-get install neovim
+
+add
+```
+set runtimepath^=~/.vim runtimepath+=~/.vim/afterccc
+let &packpath=&runtimepath
+source ~/.vimrc
+```
+
+to ~/.config/nvim/init.vim
+
+# magical paste buffer
+
+# numix solarized light and dark
+
+#term solarized
+github/aruhier/gnome-terminal-colors-solarized 
+
+# slack
+snap or rpm
+
+# copyq
+afiy copyq
+
+#kubectl
+asdf plugin-add kubectl
+asdf install kubectl 1.21.14
+asdf global kubectl 1.21.14
+
+#node
+nodejs
+
+#8gb swap
+
+sudo fallocate -l 8G /swapfile1
+sudo chmod 600 /swapfile1
+sudo mkswap /swapfile1
+sudo swapon /swapfile1
+sudo cp /etc/fstab /etc/fstab.bak
+echo '/swapfile1 none swap sw 0 0' | sudo tee -a /etc/fstab
+echo 'vm.swappiness = 15' | sudo tee -a /etc/sysctl.conf
+sudo sysctl -p
+
+#old stuff
+install sops - github .deb
+install hub
+github credentials for hub
+install kustomize to .local/bin
+apt-fast install -y tree ack jq p7zip pavucontrol xclip
+
+gtile gnome extension
+6x4
+
+docker (from setup script)
+$ curl -fsSL https://get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+
+docker add user to group
+ sudo usermod -aG docker $USER
+
+hide top bar gnome extension
+
+
+swap capslock
+(gnome tweaks works), found it with dconf watch but cant get it to set
+or set xkboptions on login caps:swap
