@@ -34,7 +34,7 @@ krew_version = 0.4.3
 kubectl := $(HOME)/.asdf/shims/kubectl
 kubectl_version = 1.21.14
 kustomize := $(HOME)/.asdf/shims/kustomize
-kustomize_version = v1.21.14
+kustomize_version = 4.5.7
 nodejs := $(HOME)/.asdf/shims/nodejs
 nodejs_version := 17.9.1
 nvim := /usr/bin/vim #TODO
@@ -130,7 +130,7 @@ $(asdf): $(apt)
 .PHONY: python
 python: $(python)
 $(python): $(asdf) $(apt)
-	afiy libssl-dev
+	$(apt) -y install libssl-dev
 	-asdf plugin-add python
 	asdf install python latest
 	asdf global python latest
