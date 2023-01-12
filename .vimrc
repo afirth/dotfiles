@@ -137,8 +137,8 @@ let s:bg = system('gsettings get org.gnome.desktop.interface gtk-theme | grep -i
 if s:bg == "dark"
   set background=dark
 else
-  "set background=light
-  set background=dark "TODO force dark until installed numix
+  "set background=dark "TODO force dark until installed numix
+  set background=light
 endif
 
 colorscheme solarized

@@ -36,19 +36,20 @@ kustomize := $(HOME)/.asdf/shims/kustomize
 kustomize_version = v1.21.14
 nodejs := $(HOME)/.asdf/shims/nodejs
 nodejs_version := 17.9.1
-nvim := /usr/bin/vim
+nvim := /usr/bin/vim #TODO
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
-python := $(HOME)/.asdf/shims/python
-skaffold := $(HOME)/.asdf/shims/skaffold
-skaffold_version = 1.39.3
 tmux := /usr/bin/tmux
+solarized := $(HOME)/.themes/NumixSolarizedDarkBlue
+skaffold_version = 1.39.3
+skaffold := $(HOME)/.asdf/shims/skaffold
+python := $(HOME)/.asdf/shims/python
 vim := /usr/bin/vim
 xinitrc := $(HOME)/.xinitrc
 zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) $(copyq) gnome-desktop capslock $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(solarized) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) $(copyq) gnome-desktop capslock $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
 
 .PHONY: run-once
 run-once: apt-utils gcloud chrome zoom kustomize sops gnome-extensions
@@ -258,6 +259,14 @@ $(apt):
 	sudo add-apt-repository -y ppa:apt-fast/stable
 	sudo apt-get update
 	sudo apt-get -y install apt-fast
+
+## numix solarized theme
+$(solarized): | $(apt)
+	mkdir -p $(@D) && \
+	cd $(@D) && \
+	wget -nc -O $(HOME)/Downloads/NumixSolarized-20210831.tar.gz --no-check-certificate https://github.com/Ferdi265/numix-solarized-gtk-theme/releases/download/20210831/NumixSolarized-20210831.tar.gz || echo already downloaded theme && \
+	tar --strip-components=1 -xvzf $(HOME)/Downloads/NumixSolarized-20210831.tar.gz && \
+	gsettings set org.gnome.desktop.interface gtk-theme $(@F)
 
 hidetopbar:
 	./install-gnome-extensions.sh --enable 545
