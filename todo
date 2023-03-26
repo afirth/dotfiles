@@ -1,7 +1,7 @@
 awsume
 
-# skaffold
-
+# numix solarized light and dark
+just set term colors to "use system theme" and you're good to go
 
 # nvim
 sudo apt-get install neovim
@@ -16,11 +16,8 @@ source ~/.vimrc
 to ~/.config/nvim/init.vim
 
 # magical paste buffer
+copyq
 
-# numix solarized light and dark
-
-#term solarized
-github/aruhier/gnome-terminal-colors-solarized 
 
 # slack
 snap or rpm
