@@ -91,11 +91,6 @@ Plug 'tmhedberg/SimpylFold' "folding
 Plug 'scrooloose/nerdcommenter' " Comment blocks: \c<space> to toggle
 let g:NERDSpaceDelims = 1
 
-Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for variable alignment
-"to use: :RetabIndent[!]
-set listchars=tab:▻\ ,nbsp:␣,trail:•,extends:⟩,precedes:⟨
-
-
 " Markdown
 
 " Enable spellcheck
@@ -175,22 +170,26 @@ let g:go_fmt_experimental = 1 " fix folds reverting on every write due to go_fmt
 
 
 "" Tabs and indenting
+Plug 'vim-scripts/Smart-Tabs' " Smart tabs - tabs at line start, spaces for variable alignment
+"to use: :RetabIndent[!]
+set listchars=tab:▻\ ,nbsp:␣,trail:•,extends:⟩,precedes:⟨
+set list                " since we have sensible tab displays now
+
 syntax on               " enable syntax highlighting
 filetype on             " enable filetype detection
 filetype indent on      " enable filetype-specific indenting
 filetype plugin on      " enable filetype-specific plugins
 autocmd Filetype php setlocal noexpandtab tabstop=4 shiftwidth=4
+autocmd Filetype go setlocal nolist " gofmt takes care of any issues so let's make it pretty
 set autoindent          " auto indenting
 set smartindent         " smart indenting
-set expandtab           " spaces instead of tabs
+set expandtab           " spaces instead of tabs " generally overridden
 set smarttab            " better backspace and tab functionality
 set backspace=2         " more powerful backspacing
 set shiftwidth=2        " front of line
 set tabstop=2
 set softtabstop=2       " midline, even if no text after (with smarttab)
 let g:html_indent_inctags = "html,body,head,tbody" "indent includes for html
-set list                " since we have sensible tab displays now
-
 
 "" Bells
 set vb t_vb=            " disable all error bells and flashing
