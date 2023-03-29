@@ -7,6 +7,7 @@ dotfiles = .ackrc \
            .bash_profile \
            .config/autostart/inputplug.desktop \
            .local/bin/on-new-kbd.sh \
+           .vim/scripts/partial_accept.vim \
            .gitconfig \
            .gitignore \
            .oh-my-zsh/custom/themes/afirth.zsh-theme \

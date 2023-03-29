@@ -60,6 +60,7 @@ if has('nvim')
   set mouse=a
   set clipboard=unnamedplus " autoselect waiting for https://github.com/neovim/neovim/issues/2325
 
+  source ~/.vim/scripts/partial_accept.vim
 endif
 "END NVIM ONLY
 

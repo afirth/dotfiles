@@ -10,7 +10,7 @@ export PATH=~/.local/bin:$PATH
 # Golang
 which go > /dev/null && \
   export GOPATH=$(go env GOPATH) && \
-  export PATH=$GOPATH/bin:$PATH
+  # export PATH=$GOPATH/bin:$PATH # using asdf for all go
   export PATH=/usr/local/go/bin:$PATH #for ubuntu go install
 
 # # Linkerd
