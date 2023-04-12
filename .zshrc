@@ -92,6 +92,8 @@ alias ll='ls -laht'
 #preserve aliases in watch commands. can't pass args though
 alias wat='watch '
 
+alias xc='xclip -sel clip'
+
 alias afiy='apt-fast install -y'
 alias pkzs='pkill zoom; pkill slack'
 

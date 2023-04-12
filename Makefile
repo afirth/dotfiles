@@ -243,7 +243,7 @@ $(oh-my-zsh): | $(zsh) $(curl)
 
 ### zsh-auto-suggestions
 $(zsh-auto): $(oh-my-zsh)
-	git clone https://github.com/zsh-users/zsh-autosuggestions $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+	-git clone https://github.com/zsh-users/zsh-autosuggestions $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 ### zsh itself
 $(zsh): | $(apt)
