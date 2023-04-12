@@ -138,6 +138,8 @@ alias kns='kubectl config set-context --current --namespace'
 alias gl='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
 alias gcm='git commit -m'
 
+alias gfin='echo -n Fixed in $(git rev-parse --short HEAD) | xclip -sel clip'
+
 # Gcloud
 # stream last build logs
 alias gblog='gcloud beta builds list --limit=1 --format=value\(extract\(id\)\) | xargs gcloud beta builds log --stream'
