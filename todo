@@ -1,5 +1,8 @@
 awsume
 
+#gen 7 only - lap mode disabled
+https://gist.github.com/sylvainfaivre/512fe8c171582caca3cabaed023188b4
+
 # numix solarized light and dark
 just set term colors to "use system theme" and you're good to go
 
