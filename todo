@@ -3,6 +3,10 @@ awsume
 #gen 7 only - lap mode disabled
 https://gist.github.com/sylvainfaivre/512fe8c171582caca3cabaed023188b4
 
+#tophat
+afiy chrome-gnome-shell gir1.2-gtop-2.0
+https://extensions.gnome.org/extension/5219/tophat/
+
 # numix solarized light and dark
 just set term colors to "use system theme" and you're good to go
 
