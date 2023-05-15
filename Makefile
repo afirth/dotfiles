@@ -50,10 +50,10 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(solarized) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) $(copyq) gnome-desktop capslock $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(solarized) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) $(copyq) gnome-desktop $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
 
 .PHONY: run-once
-run-once: apt-utils gcloud chrome zoom kustomize sops gnome-extensions
+run-once: apt-utils chrome zoom gnome-extensions
 
 ## Not idempotent targets
 .PHONY: apt-utils
@@ -85,13 +85,6 @@ sops: $(curl)
 	sudo apt install ~/Downloads/sops.deb
 
 ## Idempotent targets
-
-# so you can use the keyboard
-# set with `dconf watch /` and then gnome-tweaks for whatever settings you like, then `gsettings list-recursively| grep xkb`
-.PHONY: capslock
-capslock:
-	$(apt) -y install inputplug
-	inputplug -d -c ~/.local/bin/on-new-kbd.sh &
 
 .PHONY: cmake
 cmake: $(cmake)

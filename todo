@@ -4,34 +4,31 @@ awsume
 just set term colors to "use system theme" and you're good to go
 
 # nvim
-sudo apt-get install neovim
+afiy neovim
 
 add
 ```
+mkdir -p ~/.config/nvim/
+cat <<EOF > ~/.config/nvim/init.vim
 set runtimepath^=~/.vim runtimepath+=~/.vim/afterccc
 let &packpath=&runtimepath
 source ~/.vimrc
+EOF
 ```
 
 to ~/.config/nvim/init.vim
 
 # magical paste buffer
 copyq
+# authy desktop
+sudo snap install authy
 
 
 # slack
-snap or rpm
+snap install slack
 
-# copyq
-afiy copyq
+# perfmon
 
-#kubectl
-asdf plugin-add kubectl
-asdf install kubectl 1.21.14
-asdf global kubectl 1.21.14
-
-#node
-nodejs
 
 #8gb swap
 
@@ -67,3 +64,16 @@ hide top bar gnome extension
 swap capslock
 (gnome tweaks works), found it with dconf watch but cant get it to set
 or set xkboptions on login caps:swap
+use gnometweaks
+
+#done
+
+#kubectl
+asdf plugin-add kubectl
+asdf install kubectl 1.21.14
+asdf global kubectl 1.21.14
+
+# skaffold
+asdf
+#node
+nodejs
