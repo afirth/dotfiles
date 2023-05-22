@@ -19,6 +19,7 @@ links := $(patsubst %,$(HOME)/%,$(dotfiles))
 apt := /usr/bin/apt-fast
 asdf := ~/.asdf
 aws := /usr/local/bin/aws
+awsume := $(HOME)/.local/bin/awsume
 cmake := /usr/bin/cmake
 copyq := /usr/bin/copyq
 curl := /usr/bin/curl
@@ -43,6 +44,7 @@ tmux := /usr/bin/tmux
 solarized := $(HOME)/.themes/NumixSolarizedDarkBlue
 skaffold_version = 1.39.3
 skaffold := $(HOME)/.asdf/shims/skaffold
+pipx := $(HOME)/.local/bin/pipx
 python := $(HOME)/.asdf/shims/python
 vim := /usr/bin/vim
 xinitrc := $(HOME)/.xinitrc
@@ -50,7 +52,7 @@ zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(solarized) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(gnome-tweaks) $(copyq) gnome-desktop $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
+all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(solarized) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(awsume) $(gnome-tweaks) $(copyq) gnome-desktop $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
 
 .PHONY: run-once
 run-once: apt-utils chrome zoom gnome-extensions
@@ -136,6 +138,18 @@ $(aws): $(curl)
 	unzip /tmp/awscliv2.zip -d /tmp/
 	sudo /tmp/aws/install
 
+.PHONY: awsume
+awsume: $(awsume)
+$(awsume): $(pipx)
+	pipx install awsume
+
+.PHONY: pipx
+pipx: $(pipx)
+$(pipx):
+	pip3 install --upgrade pip
+	python3 -m pip install --user pipx
+	python3 -m pipx ensurepath
+
 .PHONY: gnome-desktop
 gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
@@ -157,7 +171,6 @@ $(kubectl): $(asdf)
 	asdf install kubectl $(kubectl_version)
 	asdf global kubectl $(kubectl_version)
 
-# it l
 .PHONY: krew
 krew: $(krew)
 $(krew): $(asdf)
