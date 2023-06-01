@@ -1,3 +1,17 @@
+#flatpak
+afiy flatpack
+afiy gnome-software-plugin-flatpak
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+restart
+
+
+# gnome-extension-manager
+flatpak install flathub com.mattjakeman.ExtensionManager #add --yes somehow
+
+#extensions
+tophat
+hide top bar
+
 #gen 7 only - lap mode disabled
 https://gist.github.com/sylvainfaivre/512fe8c171582caca3cabaed023188b4
 
