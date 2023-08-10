@@ -29,7 +29,8 @@ gh := /usr/bin/gh
 gh-apt-repo := /etc/apt/sources.list.d/github-cli.list
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 gnome-tweaks := /usr/bin/gnome-tweaks
-golang := /usr/local/bin/go
+golang_version = 1.20
+golang := $(HOME)/.asdf/shims/golang
 krew := $(HOME)/.asdf/shims/kubectl-krew
 krew_version = 0.4.3
 kubectl := $(HOME)/.asdf/shims/kubectl
@@ -206,14 +207,11 @@ $(docker):
 	sudo usermod -aG docker $(USER)
 	sudo systemctl enable --now docker
 
-## GOLANG
-## mostly use asdf go shim now
-GO_VERSION := 1.14
-$(golang): /usr/local/go
-	sudo ln -fs /usr/local/go/bin/go /usr/local/bin
-
-/usr/local/go: | $(curl)
-	curl -fsSL https://dl.google.com/go/go$(GO_VERSION).linux-amd64.tar.gz | sudo tar -C /usr/local -xvz
+.PHONY: golang
+$(golang): $(asdf)
+	-asdf plugin-add golang
+	asdf install golang $(golang_version)
+	asdf global golang $(golang_version)
 
 # install vim-gtk3
 # it's already aliased to vi in zshrc
