@@ -50,6 +50,7 @@ export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=60'
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   asdf
+  argocd
   aws
   common-aliases
   docker
