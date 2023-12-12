@@ -43,6 +43,7 @@ nvim := /usr/bin/vim #TODO
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
 tmux := /usr/bin/tmux
 solarized := $(HOME)/.themes/NumixSolarizedDarkBlue
+solarized_url := https://github.com/Ferdi265/numix-solarized-gtk-theme/releases/download/20230408/NumixSolarized-20230408.tar.gz
 skaffold_version = 1.39.3
 skaffold := $(HOME)/.asdf/shims/skaffold
 pipx := $(HOME)/.local/bin/pipx
@@ -268,10 +269,11 @@ $(apt):
 ## numix solarized theme
 $(solarized): | $(apt)
 	mkdir -p $(@D) && \
-	cd $(@D) && \
-	wget -nc -O $(HOME)/Downloads/NumixSolarized-20210831.tar.gz --no-check-certificate https://github.com/Ferdi265/numix-solarized-gtk-theme/releases/download/20210831/NumixSolarized-20210831.tar.gz || echo already downloaded theme && \
-	tar --strip-components=1 -xvzf $(HOME)/Downloads/NumixSolarized-20210831.tar.gz && \
-	gsettings set org.gnome.desktop.interface gtk-theme $(@F)
+		cd $(@D) && \
+		wget -nc -O $(HOME)/Downloads/NumixSolarized.tar.gz --no-check-certificate $(solarized_url) || \
+		echo already downloaded theme && \
+		tar --strip-components=1 -xvzf $(HOME)/Downloads/NumixSolarized.tar.gz && \
+		gsettings set org.gnome.desktop.interface gtk-theme $(@F)
 
 hidetopbar:
 	./install-gnome-extensions.sh --enable 545
