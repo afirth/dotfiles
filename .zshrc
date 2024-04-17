@@ -104,6 +104,8 @@ alias dispsw='~/git/afirth/dotfiles/toggle-display.sh'
 alias dispex='xrandr --output HDMI-1 --auto --primary --output eDP-1 --off'
 alias dispint='xrandr --output eDP-1 --auto --primary --output HDMI-1 --off'
 
+alias s-mfa='aws sso login --profile PowerUserAccess-200602884457'
+
 ## theme switching
 light_theme='NumixSolarizedLightBlue'
 dark_theme='NumixSolarizedDarkBlue'
@@ -237,4 +239,3 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-
