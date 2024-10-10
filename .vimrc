@@ -64,6 +64,9 @@ if has('nvim')
 endif
 "END NVIM ONLY
 
+"autoresize
+autocmd VimResized * wincmd =
+
 "typescript
 autocmd BufNewFile,BufRead *.ts setlocal filetype=typescript
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
