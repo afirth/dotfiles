@@ -84,6 +84,9 @@ Plug 'tpope/vim-bundler', { 'for': 'ruby' }
 Plug 'fatih/vim-go', { 'for': 'go'}
 Plug 'mdempsky/gocode', { 'rtp': 'vim', 'do': '~/.vim/plugged/gocode/vim/symlink.sh', 'for': 'go' }
 let g:go_addtags_transform="camelcase" " json tags in camelCase instead of snake_case, required for kube
+let g:go_fmt_command = "gopls" " faster than goimports
+let g:go_use_language_server = 1
+let g:go_language_server_auto = 1
 
 "Plug 'jgdavey/tslime.vim' " send commands to tmux
 

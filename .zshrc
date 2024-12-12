@@ -54,6 +54,7 @@ plugins=(
   aws
   common-aliases
   docker
+  fzf
   gcloud
   git
   golang
