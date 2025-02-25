@@ -3,24 +3,56 @@
   name = afirth
   email = afirth@users.noreply.github.com
   #signingkey = 613EEDA
-[branch "master"]
-  rebase = true
 [core]
   editor = vim
-  excludesfile = /home/afirth/.gitignore
+  excludesfile = ~/.gitignore
+  # run fs event monitor on each repo
+    # fsmonitor = true
+    # untrackedCache = true
 [credential]
   # helper = osxkeychain
-   helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
+  helper = /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
   # helper = cache
 [gpg]
   program = gpg
 [pull]
   rebase = true
-[diff "sopsdiffer"]
-  textconv = sops -d
 [hub]
   protocol = https
-[diff]
-	tool = vimdiff
 [init]
-	defaultBranch = main
+  defaultBranch = main
+[column]
+  ui = auto
+[branch]
+  sort = -committerdate
+[tag]
+  sort = version:refname
+[init]
+  defaultBranch = main
+[diff]
+  algorithm = histogram
+  colorMoved = plain
+  mnemonicPrefix = true
+  renames = true
+  tool = vimdiff
+[push]
+  default = simple
+  autoSetupRemote = true
+  followTags = true
+[fetch]
+  # prune = true
+  pruneTags = true
+  all = true
+[help]
+  autocorrect = prompt
+[commit]
+  verbose = true
+[rerere]
+  enabled = true
+  autoupdate = true
+[rebase]
+  autoSquash = true
+  autoStash = true
+  updateRefs = true
+[merge]
+  conflictstyle = zdiff3
