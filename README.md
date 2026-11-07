@@ -42,7 +42,9 @@ for the machine's Ubuntu or Debian codename and amd64/arm64 architecture. Ubuntu
 22.04 uses `jammy`. The release must be available in Cloudflare's repository.
 The target installs the repository signing key with a scoped `signed-by` keyring,
 then installs `cloudflare-warp`. An installed package is left unchanged on repeat
-runs; use APT to upgrade it. This target does not require apt-fast.
+runs; use apt-fast to upgrade it. Package operations use `sudo apt-fast`; the
+helper installs apt-fast from its Ubuntu PPA through APT if it is missing.
+On Debian, install apt-fast before running this target.
 
 Registration and connection are explicit steps, following Cloudflare's
 [Linux client instructions](https://developers.cloudflare.com/warp-client/get-started/linux/):

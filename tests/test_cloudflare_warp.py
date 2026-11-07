@@ -29,9 +29,18 @@ elif name == 'dpkg-query':
         print('install ok installed')
     else:
         sys.exit(1)
+elif name == 'add-apt-repository':
+    assert args == ['--yes', 'ppa:apt-fast/stable'], args
 elif name == 'apt-get':
+    assert args in (['update'], ['install', '-y', 'software-properties-common'],
+                    ['install', '-y', 'apt-fast']), args
+    if args == ['install', '-y', 'apt-fast']:
+        dest = pathlib.Path(sys.argv[0]).with_name('apt-fast')
+        shutil.copyfile(sys.argv[0], dest)
+        dest.chmod(0o755)
+elif name == 'apt-fast':
     calls = [json.loads(line) for line in logpath.read_text().splitlines()]
-    updates = sum(call == ['apt-get', 'update'] for call in calls)
+    updates = sum(call == ['apt-fast', 'update'] for call in calls)
     if args == ['update'] and updates == int(os.environ.get('FAIL_UPDATE', '0')):
         sys.exit(100)
     if args == ['install', '-y', 'cloudflare-warp']:
@@ -78,7 +87,7 @@ class CloudflareWarpTests(unittest.TestCase):
                         TEST_REAL_GPG=shutil.which('gpg'),
                         TEST_REAL_INSTALL=shutil.which('install'),
                         GNUPGHOME=str(self.gpg_home), TMPDIR=str(self.stage))
-        for tool in ('sudo', 'apt-get', 'dpkg', 'dpkg-query', 'uname', 'curl', 'gpg', 'install'):
+        for tool in ('sudo', 'apt-get', 'apt-fast', 'add-apt-repository', 'dpkg', 'dpkg-query', 'uname', 'curl', 'gpg', 'install'):
             path = self.bin / tool
             path.write_text(FAKE_TOOL)
             path.chmod(0o755)
@@ -108,7 +117,7 @@ class CloudflareWarpTests(unittest.TestCase):
                        env=self.env, check=True, capture_output=True)
         self.assertEqual(self.keyring.stat().st_mode & 0o777, 0o644)
         self.assertEqual(self.repo.stat().st_mode & 0o777, 0o644)
-        self.assertEqual(self.calls('apt-get'), [
+        self.assertEqual(self.calls('apt-fast'), [
             ['update'], ['install', '-y', 'ca-certificates', 'curl', 'gnupg'],
             ['update'], ['install', '-y', 'cloudflare-warp']])
         self.assertTrue(self.installed.exists())
@@ -125,6 +134,16 @@ class CloudflareWarpTests(unittest.TestCase):
         self.assertEqual(self.calls('sudo'), [])
         self.assertEqual(self.calls('curl'), [])
         self.assertEqual(before, (self.repo.read_bytes(), self.keyring.read_bytes()))
+
+    def test_missing_apt_fast_is_bootstrapped_before_installing_warp(self):
+        (self.bin / 'apt-fast').unlink()
+        self.make()
+        self.assertEqual(self.calls('apt-get'), [
+            ['update'], ['install', '-y', 'software-properties-common'],
+            ['update'], ['install', '-y', 'apt-fast']])
+        self.assertEqual(self.calls('add-apt-repository'), [['--yes', 'ppa:apt-fast/stable']])
+        self.assertIn(['install', '-y', 'cloudflare-warp'], self.calls('apt-fast'))
+        self.assertTrue(self.installed.exists())
 
     def test_arm64_uses_native_architecture(self):
         self.env['TEST_ARCH'] = 'arm64'
@@ -181,7 +200,7 @@ class CloudflareWarpTests(unittest.TestCase):
                 self.log.write_text('')
                 self.env['FAIL_UPDATE'] = update
                 self.make(ok=False)
-                self.assertNotIn(['install', '-y', 'cloudflare-warp'], self.calls('apt-get'))
+                self.assertNotIn(['install', '-y', 'cloudflare-warp'], self.calls('apt-fast'))
                 self.assertFalse(self.installed.exists())
 
     def test_failed_package_installation_can_be_retried(self):
