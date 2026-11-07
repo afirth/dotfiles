@@ -20,7 +20,12 @@ with open(os.environ['TEST_LOG'], 'a') as log:
     log.write(json.dumps([name] + args) + '\n')
 if name == 'sudo':
     os.execvp(args[0], args)
-if name == 'apt-get':
+if name in ('apt-get', 'apt-fast'):
+    if os.environ.get('FAIL_BOOTSTRAP') and name == 'apt-get':
+        sys.exit(100)
+    if 'apt-fast' in args:
+        shutil.copyfile(sys.argv[0], pathlib.Path(os.environ['TEST_BIN']) / 'apt-fast')
+        (pathlib.Path(os.environ['TEST_BIN']) / 'apt-fast').chmod(0o755)
     if 'install' in args:
         for package in args:
             if package in ('zsh', 'tmux', 'gh', 'pipx', 'neovim'):
@@ -103,7 +108,7 @@ class MakefileTests(unittest.TestCase):
             member.size = len(data)
             out.addfile(member, io.BytesIO(data))
         self.archive = archive
-        for tool in ('sudo', 'apt-get', 'git', 'curl', 'gsettings', 'gh'):
+        for tool in ('sudo', 'apt-get', 'apt-fast', 'add-apt-repository', 'git', 'curl', 'gsettings', 'gh'):
             path = self.bin / tool
             path.write_text(FAKE_TOOL)
             path.chmod(0o755)
@@ -138,7 +143,7 @@ class MakefileTests(unittest.TestCase):
         before = self.log.read_text()
         self.make('-j8', 'dotfiles')
         self.assertEqual(before, self.log.read_text())
-        self.assertEqual(self.calls('apt-get'), [['install', '-y', 'zsh']])
+        self.assertEqual(self.calls('apt-fast'), [['install', '-y', 'zsh']])
         self.assertEqual(len(self.calls('git')), 1)
 
     def test_oh_my_zsh_does_not_delete_existing_zshrc(self):
@@ -215,18 +220,46 @@ class MakefileTests(unittest.TestCase):
         self.make(str(tpm))
         self.assertTrue(tpm.exists())
         self.assertEqual(len(self.calls('git')), 1)
-        self.assertEqual(self.calls('apt-get'), [])
+        self.assertEqual(self.calls('apt-fast'), [])
 
     def test_gh_completion_with_existing_gh_does_not_change_apt_sources(self):
         self.make('gh')
         self.assertTrue((self.home / '.oh-my-zsh/completions/_gh').exists())
         # Only Zsh was absent; no GitHub repository or gh package was needed.
-        self.assertEqual(self.calls('apt-get'), [['install', '-y', 'zsh']])
+        self.assertEqual(self.calls('apt-fast'), [['install', '-y', 'zsh']])
 
     def test_apt_utils_uses_privileged_package_manager(self):
         self.make('apt-utils')
-        self.assertEqual(self.calls('sudo')[0][:3], ['apt-get', 'install', '-y'])
+        self.assertEqual(self.calls('sudo')[0][:3], ['apt-fast', 'install', '-y'])
+        self.assertIn('xclip', self.calls('apt-fast')[0])
+        self.assertEqual(self.calls('apt-get'), [])
+        self.assertEqual(self.calls('add-apt-repository'), [])
+
+    def test_missing_apt_fast_is_bootstrapped_once(self):
+        (self.bin / 'apt-fast').unlink()
+        self.make('apt-utils')
+        self.assertEqual(self.calls('apt-get'), [
+            ['update'], ['install', '-y', 'software-properties-common'],
+            ['update'], ['install', '-y', 'apt-fast']])
+        self.assertEqual(self.calls('add-apt-repository'), [['--yes', 'ppa:apt-fast/stable']])
+        self.assertIn('xclip', self.calls('apt-fast')[0])
+        self.make('apt-utils')
+        self.assertEqual(len(self.calls('apt-get')), 4)
+        self.assertEqual(len(self.calls('apt-fast')), 2)
+
+    def test_failed_bootstrap_stops_package_operation(self):
+        (self.bin / 'apt-fast').unlink()
+        self.env['FAIL_BOOTSTRAP'] = '1'
+        self.make('apt-utils', ok=False)
+        self.assertEqual(self.calls('apt-get'), [['update']])
+        self.assertEqual(self.calls('apt-fast'), [])
+        self.assertEqual(self.calls('add-apt-repository'), [])
+
+    def test_explicit_apt_override_skips_bootstrap(self):
+        (self.bin / 'apt-fast').unlink()
+        self.make('apt-utils', apt='sudo apt-get')
         self.assertIn('xclip', self.calls('apt-get')[0])
+        self.assertEqual(self.calls('add-apt-repository'), [])
 
     def test_modern_gnome_without_legacy_key(self):
         self.make('gnome-desktop')
@@ -240,7 +273,7 @@ class MakefileTests(unittest.TestCase):
                 self.log.write_text('')
                 self.make(target, ok=False, aws=self.home / 'bin/aws')
                 self.assertFalse(any(any(a.endswith('.deb') for a in args)
-                                     for args in self.calls('apt-get')))
+                                     for args in self.calls('apt-fast')))
                 self.assertFalse(any(any(a.endswith('/aws/install') for a in args)
                                      for args in self.calls('sudo')))
 

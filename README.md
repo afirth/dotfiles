@@ -21,8 +21,10 @@ cd mac-dev-playbook && ansible-playbook main.yml -i inventory -K --tags "dotfile
 
 ## Makefile development
 
-Package recipes use `sudo apt-get` by default. Override `apt` to use another
-privileged package manager, for example `make apt="sudo apt-fast"`.
+Package recipes use `sudo apt-fast` by default. If apt-fast is missing, the
+helper installs it from `ppa:apt-fast/stable` using APT, then forwards the package
+operation to apt-fast. Override `apt` to use another privileged package manager,
+for example `make apt="sudo apt-get"`.
 Installations run serially even with `make -j`, because APT and asdf share mutable
 state. After installing Zsh, change your login shell explicitly with
 `chsh -s /usr/bin/zsh` if desired.

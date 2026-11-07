@@ -18,7 +18,7 @@ dotfiles = .ackrc \
            .zshrc
 links := $(patsubst %,$(HOME)/%,$(dotfiles))
 
-apt ?= sudo apt-get
+apt ?= bash "$(CURDIR)/scripts/apt-fast.sh"
 asdf := $(HOME)/.asdf
 asdf-init := $(asdf)/asdf.sh
 aws := /usr/local/bin/aws
