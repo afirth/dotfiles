@@ -63,4 +63,3 @@ running WARP service (requires Python 3, GNU Make, Bash and GnuPG):
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
 ```
-
