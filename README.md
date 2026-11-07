@@ -19,6 +19,16 @@ make
 cd mac-dev-playbook && ansible-playbook main.yml -i inventory -K --tags "dotfiles"
 ```
 
+## Description
+
+My configuration. OSX centric
+
+[edit 2019 - not anymore! I've joined #linuxmasterrace on most of my boxes]
+
+## License
+
+MIT / BSD
+
 ## Cloudflare WARP
 
 Install the Linux client separately from the default desktop setup:
@@ -48,18 +58,9 @@ The Make target does not register an account, accept terms on your behalf, or
 connect the tunnel. Use `warp-cli disconnect` to disconnect.
 
 Run the installation orchestration tests without root, network access, or a
-running WARP service:
+running WARP service (requires Python 3, GNU Make, Bash and GnuPG):
 
 ```sh
 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
 ```
 
-## Description
-
-My configuration. OSX centric
-
-[edit 2019 - not anymore! I've joined #linuxmasterrace on most of my boxes]
-
-## License
-
-MIT / BSD
