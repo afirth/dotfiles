@@ -2,6 +2,8 @@
 MAKEFLAGS += --warn-undefined-variables
 SHELL = /bin/bash
 .SUFFIXES:
+# APT/dpkg and asdf global configuration cannot be updated concurrently.
+.NOTPARALLEL:
 
 dotfiles = .ackrc \
            .bash_profile \
@@ -16,8 +18,9 @@ dotfiles = .ackrc \
            .zshrc
 links := $(patsubst %,$(HOME)/%,$(dotfiles))
 
-apt := /usr/bin/apt-fast
-asdf := ~/.asdf
+apt ?= bash "$(CURDIR)/scripts/apt-fast.sh"
+asdf := $(HOME)/.asdf
+asdf-init := $(asdf)/asdf.sh
 aws := /usr/local/bin/aws
 awsume := $(HOME)/.local/bin/awsume
 cmake := /usr/bin/cmake
@@ -26,35 +29,36 @@ curl := /usr/bin/curl
 docker := /usr/bin/docker
 eksctl := $(HOME)/.local/bin/eksctl
 gh := /usr/bin/gh
-gh-apt-repo := /etc/apt/sources.list.d/github-cli.list
+gcloud-key := /usr/share/keyrings/cloud.google.gpg
+gcloud-repo := /etc/apt/sources.list.d/google-cloud-sdk.list
 git-creds := /usr/share/doc/git/contrib/credential/libsecret/git-credential-libsecret
 gnome-tweaks := /usr/bin/gnome-tweaks
 golang_version = 1.20
-golang := $(HOME)/.asdf/shims/golang
+golang := $(HOME)/.asdf/shims/go
 krew := $(HOME)/.asdf/shims/kubectl-krew
 krew_version = 0.4.3
 kubectl := $(HOME)/.asdf/shims/kubectl
 kubectl_version = 1.21.14
 kustomize := $(HOME)/.asdf/shims/kustomize
 kustomize_version = 4.5.7
-nodejs := $(HOME)/.asdf/shims/nodejs
+nodejs := $(HOME)/.asdf/shims/node
 nodejs_version := 17.9.1
-nvim := /usr/bin/vim #TODO
+nvim := /usr/bin/nvim
 oh-my-zsh := $(HOME)/.oh-my-zsh/oh-my-zsh.sh
 tmux := /usr/bin/tmux
+tpm := $(HOME)/.tmux/plugins/tpm/tpm
 solarized := $(HOME)/.themes/NumixSolarizedDarkBlue
 solarized_url := https://github.com/Ferdi265/numix-solarized-gtk-theme/releases/download/20230408/NumixSolarized-20230408.tar.gz
 skaffold_version = 1.39.3
 skaffold := $(HOME)/.asdf/shims/skaffold
-pipx := $(HOME)/.local/bin/pipx
+pipx := /usr/bin/pipx
 python := $(HOME)/.asdf/shims/python
 vim := /usr/bin/vim
-xinitrc := $(HOME)/.xinitrc
 zsh := /usr/bin/zsh
 zsh-auto := $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 .PHONY: all
-all: $(oh-my-zsh) $(zsh-auto) $(links) $(cmake) $(solarized) $(gh) $(golang) $(git-creds) $(vim) $(tmux) $(curl) $(docker) $(apt) $(asdf) $(aws) $(awsume) $(gnome-tweaks) $(copyq) gnome-desktop $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
+all: $(oh-my-zsh) $(zsh-auto) dotfiles $(cmake) $(solarized) gh $(golang) $(git-creds) $(vim) $(nvim) $(tmux) $(tpm) $(curl) $(docker) $(asdf-init) $(aws) $(awsume) $(gnome-tweaks) $(copyq) gnome-desktop $(python) $(nodejs) $(kubectl) $(kustomize) $(skaffold)
 
 .PHONY: run-once
 run-once: apt-utils chrome zoom gnome-extensions
@@ -62,219 +66,238 @@ run-once: apt-utils chrome zoom gnome-extensions
 ## Not idempotent targets
 .PHONY: apt-utils
 apt-utils:
-	apt-fast install -y tree ack jq p7zip pavucontrol xclip
+	$(apt) install -y tree ack jq p7zip pavucontrol xclip
 
 .PHONY: gnome-extensions
 gnome-extensions: gtile hidetopbar
 
 .PHONY: gcloud
-gcloud: $(curl)
-	sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-sdk -y'
-	$(warning run gcloud init)
+gcloud: | $(curl)
+	$(apt) install -y ca-certificates gnupg
+	key="$$(mktemp)"; \
+	trap 'rm -f "$$key"' EXIT; \
+	curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor > "$$key"; \
+	sudo install -m 0644 "$$key" "$(gcloud-key)"
+	echo 'deb [signed-by=$(gcloud-key)] https://packages.cloud.google.com/apt cloud-sdk main' | \
+		sudo tee "$(gcloud-repo)" > /dev/null
+	$(apt) update
+	$(apt) install -y google-cloud-cli
+	@echo 'Run gcloud init to authenticate.'
 
 .PHONY: chrome
-chrome:
-	wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O ~/Downloads/chrome.deb
-	sudo apt install ~/Downloads/chrome.deb
+chrome: | $(curl)
+	mkdir -p $(HOME)/Downloads
+	curl -fL https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -o $(HOME)/Downloads/chrome.deb
+	$(apt) install -y $(HOME)/Downloads/chrome.deb
 
 .PHONY: zoom
-zoom:
-	wget https://zoom.us/client/latest/zoom_amd64.deb -O ~/Downloads/zoom.deb
-	sudo apt install ~/Downloads/zoom.deb --yes
+zoom: | $(curl)
+	mkdir -p $(HOME)/Downloads
+	curl -fL https://zoom.us/client/latest/zoom_amd64.deb -o $(HOME)/Downloads/zoom.deb
+	$(apt) install -y $(HOME)/Downloads/zoom.deb
 
 .PHONY: sops
-SOPS_URL=$(shell curl -s "https://api.github.com/repos/mozilla/sops/releases/latest" | grep -o "http.*sops_.*_amd64\.deb")
-sops: $(curl)
-	wget $(SOPS_URL) -O ~/Downloads/sops.deb
-	sudo apt install ~/Downloads/sops.deb
+sops: | $(curl)
+	$(apt) install -y jq
+	mkdir -p $(HOME)/Downloads
+	url="$$(curl -fsSL https://api.github.com/repos/getsops/sops/releases/latest | \
+		jq -er --arg arch "$$(dpkg --print-architecture)" '.assets[] | select(.name | endswith("_" + $$arch + ".deb")) | .browser_download_url')"; \
+	curl -fL "$$url" -o "$(HOME)/Downloads/sops.deb"
+	$(apt) install -y $(HOME)/Downloads/sops.deb
 
 ## Idempotent targets
 
 .PHONY: cmake
 cmake: $(cmake)
-$(cmake): $(apt)
+$(cmake):
 	$(apt) -y install cmake
 
 .PHONY: gnome-tweaks
 gnome-tweaks: $(gnome-tweaks)
-$(gnome-tweaks): $(apt)
+$(gnome-tweaks):
 	$(apt) -y install gnome-tweaks
 
-# github cli
+# Ubuntu 22.04 provides gh; avoid changing APT repositories on an existing install.
 .PHONY: gh
-gh: $(gh)
-$(gh): $(apt) $(gh-apt-repo)
+gh: $(gh) $(HOME)/.oh-my-zsh/completions/_gh
+$(gh):
 	$(apt) -y install gh
-	mkdir -p $(HOME)/.oh-my-zsh/completions/
-	gh completion -s zsh > $(HOME)/.oh-my-zsh/completions/_gh
 
-$(gh-apt-repo):
-	curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
-	echo "deb [arch=$(shell dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-	$(apt) update
+$(HOME)/.oh-my-zsh/completions/_gh: | $(gh) $(oh-my-zsh)
+	mkdir -p "$(@D)"
+	$(gh) completion -s zsh > "$@"
 
 .PHONY: copyq
 copyq: $(copyq)
-$(copyq): $(apt)
+$(copyq):
 	$(apt) -y install copyq copyq-plugins copyq-doc
 
 #https://asdf-vm.com/#/core-manage-asdf-vm
 .PHONY: asdf
-asdf: $(asdf)
-$(asdf): $(apt)
-	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.10.2
+asdf: $(asdf-init)
+$(asdf-init):
+	git clone https://github.com/asdf-vm/asdf.git "$(asdf)" --branch v0.10.2
+
+# Initialize the pinned asdf release in each noninteractive recipe shell.
+# Do not hide plugin-install failures or resolve "latest" twice.
+define install-asdf-tool
+. "$(asdf-init)"; \
+asdf plugin list | grep -Fxq '$(1)' || asdf plugin add '$(1)'; \
+version='$(2)'; \
+if [ "$$version" = latest ]; then version="$$(asdf latest '$(1)')"; fi; \
+asdf install '$(1)' "$$version"; \
+asdf global '$(1)' "$$version"
+endef
 
 .PHONY: python
 python: $(python)
-$(python): $(asdf) $(apt)
-	$(apt) -y install libssl-dev
-	-asdf plugin-add python
-	asdf install python latest
-	asdf global python latest
+$(python): | $(asdf-init) $(curl)
+	$(apt) install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libffi-dev liblzma-dev tk-dev
+	$(call install-asdf-tool,python,latest)
 
 #https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-linux.html#cliv2-linux-install
 .PHONY: aws
 aws: $(aws)
-$(aws): $(curl)
-	curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
-	unzip /tmp/awscliv2.zip -d /tmp/
-	sudo /tmp/aws/install
+$(aws): | $(curl)
+	$(apt) install -y unzip
+	stage="$$(mktemp -d)"; \
+	trap 'rm -rf "$$stage"' EXIT; \
+	curl -fL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "$$stage/awscliv2.zip"; \
+	unzip -q "$$stage/awscliv2.zip" -d "$$stage"; \
+	sudo "$$stage/aws/install"
 
 .PHONY: awsume
 awsume: $(awsume)
-$(awsume): $(pipx)
-	pipx install awsume
+$(awsume): | $(pipx)
+	$(pipx) install awsume
 
 .PHONY: pipx
 pipx: $(pipx)
 $(pipx):
-	pip3 install --upgrade pip
-	python3 -m pip install --user pipx
-	python3 -m pipx ensurepath
+	$(apt) install -y pipx
 
 .PHONY: gnome-desktop
 gnome-desktop:
 	gsettings set org.gnome.shell.extensions.dash-to-dock autohide false
 	gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 	gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
-	gsettings set org.gnome.desktop.background show-desktop-icons false
+	if gsettings list-keys org.gnome.desktop.background | grep -Fxq show-desktop-icons; then \
+		gsettings set org.gnome.desktop.background show-desktop-icons false; \
+	fi
 
 .PHONY: nodejs
 nodejs: $(nodejs)
-$(nodejs): $(asdf)
-	-asdf plugin-add nodejs
-	asdf install nodejs $(nodejs_version)
-	asdf global nodejs $(nodejs_version)
+$(nodejs): | $(asdf-init) $(curl)
+	$(call install-asdf-tool,nodejs,$(nodejs_version))
 
 .PHONY: kubectl
 kubectl: $(kubectl)
-$(kubectl): $(asdf)
-	-asdf plugin-add kubectl
-	asdf install kubectl $(kubectl_version)
-	asdf global kubectl $(kubectl_version)
+$(kubectl): | $(asdf-init) $(curl)
+	$(call install-asdf-tool,kubectl,$(kubectl_version))
 
 .PHONY: krew
 krew: $(krew)
-$(krew): $(asdf)
-	-asdf plugin-add krew
-	asdf install krew $(krew_version)
-	asdf global krew $(krew_version)
+$(krew): | $(asdf-init) $(curl)
+	$(call install-asdf-tool,krew,$(krew_version))
 
 .PHONY: kustomize
 kustomize: $(kustomize)
-$(kustomize): $(asdf)
-	-asdf plugin-add kustomize
-	asdf install kustomize $(kustomize_version)
-	asdf global kustomize $(kustomize_version)
+$(kustomize): | $(asdf-init) $(curl)
+	$(call install-asdf-tool,kustomize,$(kustomize_version))
 
 .PHONY: skaffold
 skaffold: $(skaffold)
-$(skaffold): $(asdf)
-	-asdf plugin-add skaffold
-	asdf install skaffold $(skaffold_version)
-	asdf global skaffold $(skaffold_version)
+$(skaffold): | $(asdf-init) $(curl)
+	$(call install-asdf-tool,skaffold,$(skaffold_version))
 
 .PHONY: eksctl
 UNAMES=$(shell uname -s)
 eksctl: $(eksctl)
-$(eksctl): $(curl)
-	UNAME="$$(uname -s)" && \
-	curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(UNAMES)_amd64.tar.gz" | tar xz -C ~/.local/bin/
-	mkdir -p ~/.zsh/completion/
-	eksctl completion zsh > ~/.zsh/completion/_eksctl
+$(eksctl): | $(curl)
+	mkdir -p $(HOME)/.local/bin/
+	curl --fail --silent --show-error --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(UNAMES)_amd64.tar.gz" | tar xz -C "$(HOME)/.local/bin/"
+	mkdir -p "$(HOME)/.zsh/completion/"
+	"$(eksctl)" completion zsh > "$(HOME)/.zsh/completion/_eksctl"
 
+.PHONY: docker
+docker: $(docker)
 $(docker):
 	$(apt) install -y docker.io
 	sudo usermod -aG docker $(USER)
 	sudo systemctl enable --now docker
 
 .PHONY: golang
-$(golang): $(asdf)
-	-asdf plugin-add golang
-	asdf install golang $(golang_version)
-	asdf global golang $(golang_version)
+golang: $(golang)
+$(golang): | $(asdf-init) $(curl)
+	$(call install-asdf-tool,golang,$(golang_version))
 
 # install vim-gtk3
-# it's already aliased to vi in zshrc
+# Neovim is the editor used by the vi alias in .zshrc.
+.PHONY: vim nvim tmux
+vim: $(vim)
+nvim: $(nvim)
+tmux: $(tmux) $(tpm)
 $(vim):
 	which vim || $(apt) -y install vim-gtk3
 
+$(nvim):
+	$(apt) -y install neovim
+
 $(tmux):
-	which tmux || $(apt) -y install tmux
+	$(apt) -y install tmux
+
+$(tpm): | $(tmux)
 	git clone https://github.com/tmux-plugins/tpm $(HOME)/.tmux/plugins/tpm
-	@echo you may want to install tmux>=3.3 with asdf. requires bison, ncurses-dev, and flex
+	@echo 'You may want tmux >= 3.3 via asdf; requires bison, ncurses-dev, and flex.'
 
 ## dotfile links
 # depends on zsh because otherwise zsh install breaks
 .PHONY: dotfiles
-dotfiles: $(links) | $(zsh)
+dotfiles: $(links)
 
-$(links): $(HOME)/%: %
+$(links): $(HOME)/%: % | $(zsh)
 	@mkdir -p $(@D)
 	ln -fsr $< $@
 
-$(git-creds): | $(apt)
+# Clone oh-my-zsh before creating its custom-theme directory, including under -j.
+$(HOME)/.oh-my-zsh/custom/themes/afirth.zsh-theme: | $(oh-my-zsh)
+
+$(git-creds):
 	$(apt) install -y libsecret-1-0 libsecret-1-dev build-essential
 	sudo $(MAKE) -C /usr/share/doc/git/contrib/credential/libsecret
 
 ## ZSH
 ### oh-my-zsh
-$(oh-my-zsh): | $(zsh) $(curl)
-	curl -Lo /tmp/install.sh https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh
-	-sh /tmp/install.sh --unattended
-	rm /tmp/install.sh
-	# will be replaced by link
-	rm $(HOME)/.zshrc
+$(oh-my-zsh): | $(zsh)
+	git clone https://github.com/ohmyzsh/ohmyzsh.git "$(HOME)/.oh-my-zsh"
 
 ### zsh-auto-suggestions
-$(zsh-auto): $(oh-my-zsh)
-	-git clone https://github.com/zsh-users/zsh-autosuggestions $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+$(zsh-auto): | $(oh-my-zsh)
+	git clone https://github.com/zsh-users/zsh-autosuggestions $(HOME)/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 
 ### zsh itself
-$(zsh): | $(apt)
+$(zsh):
 	$(apt) install -y zsh
-	chsh -s /usr/bin/zsh
-	@echo Logout and back in to use zsh
+	@echo 'To change your login shell, run: chsh -s /usr/bin/zsh'
 
 ## curl
-$(curl): | $(apt)
+.PHONY: curl
+curl: $(curl)
+$(curl):
 	$(apt) install -y curl
 
-## Apt-fast
-$(apt):
-	sudo add-apt-repository -y ppa:apt-fast/stable
-	sudo apt-get update
-	sudo apt-get -y install apt-fast
-
 ## numix solarized theme
-$(solarized): | $(apt)
-	mkdir -p $(@D) && \
-		cd $(@D) && \
-		wget -nc -O $(HOME)/Downloads/NumixSolarized.tar.gz --no-check-certificate $(solarized_url) || \
-		echo already downloaded theme && \
-		tar --strip-components=1 -xvzf $(HOME)/Downloads/NumixSolarized.tar.gz && \
-		gsettings set org.gnome.desktop.interface gtk-theme $(@F)
+$(solarized): | $(curl)
+	@mkdir -p "$(@D)"
+	stage="$$(mktemp -d "$(@D)/.solarized.XXXXXX")"; \
+	trap 'rm -rf "$$stage"' EXIT; \
+	curl -fL "$(solarized_url)" -o "$$stage/theme.tar.gz"; \
+	mkdir "$$stage/theme"; \
+	tar --strip-components=1 -xzf "$$stage/theme.tar.gz" -C "$$stage/theme"; \
+	gsettings set org.gnome.desktop.interface gtk-theme "$(@F)"; \
+	mv "$$stage/theme" "$@"
 
+.PHONY: hidetopbar gtile
 hidetopbar:
 	./install-gnome-extensions.sh --enable 545
 	dconf load /org/gnome/shell/extensions/$@/ < ./$@.dconf
