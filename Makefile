@@ -305,3 +305,39 @@ hidetopbar:
 gtile:
 	./install-gnome-extensions.sh --enable 28
 	dconf load /org/gnome/shell/extensions/$@/ < ./$@.dconf
+
+## Cloudflare WARP (opt-in; registration and connection are separate)
+warp-apt ?= bash "$(CURDIR)/scripts/apt-fast.sh"
+warp-os-release := /etc/os-release
+warp-keyring := /usr/share/keyrings/cloudflare-warp-archive-keyring.gpg
+warp-repo := /etc/apt/sources.list.d/cloudflare-client.list
+
+.PHONY: cloudflare-warp
+cloudflare-warp:
+	@test "$$(uname -s)" = Linux || { echo 'cloudflare-warp requires Linux.' >&2; exit 1; }; \
+	. "$(warp-os-release)"; \
+	case "$${ID:-}" in ubuntu|debian) ;; \
+		*) echo 'cloudflare-warp requires Ubuntu or Debian.' >&2; exit 1 ;; esac; \
+	codename="$${VERSION_CODENAME:-}"; \
+	case "$$codename" in ''|*[!a-z0-9-]*) echo 'Missing or invalid distro codename.' >&2; exit 1 ;; esac; \
+	arch="$$(dpkg --print-architecture)"; \
+	case "$$arch" in amd64|arm64) ;; \
+		*) echo "Unsupported WARP architecture: $$arch" >&2; exit 1 ;; esac; \
+	if dpkg-query -W -f='$${Status}\n' cloudflare-warp 2>/dev/null | grep -Fxq 'install ok installed'; then \
+		echo 'cloudflare-warp is already installed.'; exit 0; \
+	fi; \
+	$(warp-apt) update; \
+	$(warp-apt) install -y ca-certificates curl gnupg; \
+	stage="$$(mktemp -d)"; \
+	trap 'rm -rf "$$stage"' EXIT; \
+	curl -fsSL https://pkg.cloudflareclient.com/pubkey.gpg -o "$$stage/pubkey.gpg"; \
+	gpg --batch --yes --dearmor --output "$$stage/keyring.gpg" "$$stage/pubkey.gpg"; \
+	printf 'deb [arch=%s signed-by=%s] https://pkg.cloudflareclient.com/ %s main\n' \
+		"$$arch" "$(warp-keyring)" "$$codename" > "$$stage/cloudflare-client.list"; \
+	sudo install -d -m 0755 "$(dir $(warp-keyring))" "$(dir $(warp-repo))"; \
+	sudo install -m 0644 "$$stage/keyring.gpg" "$(warp-keyring)"; \
+	sudo install -m 0644 "$$stage/cloudflare-client.list" "$(warp-repo)"; \
+	$(warp-apt) update; \
+	$(warp-apt) install -y cloudflare-warp
+	@echo 'When ready, register with: warp-cli registration new'
+	@echo 'Then connect with: warp-cli connect'
