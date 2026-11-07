@@ -19,6 +19,41 @@ make
 cd mac-dev-playbook && ansible-playbook main.yml -i inventory -K --tags "dotfiles"
 ```
 
+## Cloudflare WARP
+
+Install the Linux client separately from the default desktop setup:
+
+```sh
+make cloudflare-warp
+```
+
+This opt-in target uses Cloudflare's [official APT repository](https://pkg.cloudflareclient.com/)
+for the machine's Ubuntu or Debian codename and amd64/arm64 architecture. Ubuntu
+22.04 uses `jammy`. The release must be available in Cloudflare's repository.
+The target installs the repository signing key with a scoped `signed-by` keyring,
+then installs `cloudflare-warp`. An installed package is left unchanged on repeat
+runs; use APT to upgrade it. This target does not require apt-fast.
+
+Registration and connection are explicit steps, following Cloudflare's
+[Linux client instructions](https://developers.cloudflare.com/warp-client/get-started/linux/):
+
+```sh
+warp-cli registration new
+warp-cli connect
+warp-cli status
+curl https://www.cloudflare.com/cdn-cgi/trace  # expect warp=on
+```
+
+The Make target does not register an account, accept terms on your behalf, or
+connect the tunnel. Use `warp-cli disconnect` to disconnect.
+
+Run the installation orchestration tests without root, network access, or a
+running WARP service:
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v
+```
+
 ## Description
 
 My configuration. OSX centric
